@@ -12,6 +12,7 @@ PIGLIT_PATH=~/intel-gfx/piglit
 VALLEY_PATH=~/benchmarks/Valley-1.1-rc1/bin
 SYNMARK_PATH=~/benchmarks/Synmark2-6.00/
 HEAVEN_PATH=~/benchmarks/Heaven-4.1-rc1/
+GPUTEST_PATH=~/benchmarks/GpuTest_Linux_x64_0.7.0
 
 # Example ways to use this script:
 # Run GBM piglit with custom mesa:
@@ -136,21 +137,21 @@ TESTS[SYNMARK]='
 cd $SYNMARK_PATH ; $SYNMARK_PATH/synmark2 TESTNAMEHERE | grep FPS | awk "{print \$2}"'
 
 TESTS[FUR]='
-gputest /fullscreen /width=$RES_X /height=$RES_Y \
+$GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=fur | \
 	grep FPS |awk "{gsub(/\)\$/,\"\"); print \$5}"'
 
 TESTS[PLOT3D]='
-gputest /fullscreen /width=$RES_X /height=$RES_Y \
+$GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=plot3d | \
 	grep Score |  awk "{print \$2}"'
 
 TESTS[TRIANGLE]='
-gputest /fullscreen /width=$RES_X /height=$RES_Y \
+$GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=triangle |
