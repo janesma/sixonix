@@ -210,10 +210,6 @@ shift "$((OPTIND-1))" # Shift off the options and optional --.
 populate_test_list ${ITERATIONS}
 shuffle
 
-# Attempt to get resolution before any possible modesets
-get_dimensions #set RES_X RES_Y
-
-
 for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 	before=$(date)
 	test_name=$(echo ${TEST_LIST[i]} | awk '{print $NF}')
