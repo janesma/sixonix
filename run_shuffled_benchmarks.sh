@@ -191,7 +191,7 @@ while getopts "AgsucGdlhni:v" opt; do
 		l) LONG="true" ;;
 		d) POST_DELETE="true" ;;
 		i) ITERATIONS=$OPTARG ;;
-		n) DRY_RUN="true" ;;
+		n) DRY_RUN="true" ; POST_DELETE="false" ;;
 		v) VERBOSE="true" ;;
 		h|\?|*)
 			usage $(basename $0) >&2
