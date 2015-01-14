@@ -11,7 +11,7 @@ set -u #undeclared variables are not okay
 
 # In order to use this runner, place a symlink named glx.sh which links to
 # base.sh. That glx.sh must reside:
-GLX_RUNNER="~/scripts/tests/glx.sh"
+GLX_RUNNER="~/benchmarks/sixonix/glx.sh"
 
 # Next, the script expects the results of `make DESTDIR=foo install` for all mesa
 # builds that are to be tested here:
