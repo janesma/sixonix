@@ -234,9 +234,13 @@ if [[ $# -eq 0 ]];  then
 else
 	if [[ "$1" = "SYNMARK" ]] ; then
 		syn_test=$2
-		synmark_cfg=$3
+		if [[ $# -eq 3 ]] ; then
+			synmark_cfg="-$(basename -s .cfg $3)"
+		else
+			synmark_cfg=""
+		fi
 		cmd=${TESTS[$1]/TESTNAMEHERE/$syn_test}
-		cmd=${cmd/TESTCONFIGHERE/-$(basename -s .cfg $synmark_cfg)}
+		cmd=${cmd/TESTCONFIGHERE/$synmark_cfg}
 		shift
 		shift
 		eval $cmd
