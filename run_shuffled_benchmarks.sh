@@ -204,6 +204,7 @@ shift "$((OPTIND-1))" # Shift off the options and optional --.
 [[ "$GLBENCH" = "false" ]] && [[ "$SYNMARK" = "false" ]] &&
 [[ "$UNIGINE" = "false" ]] && [[ "$COMMUNITY" = "false" ]] &&
 [[ "$GPUTEST" = "false" ]] && echo "No tests specified" && exit 0
+[[ "$DRY_RUN" = "true" ]] && POST_DELETE=false
 
 populate_test_list ${ITERATIONS}
 shuffle
