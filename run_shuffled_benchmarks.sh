@@ -56,6 +56,7 @@ function populate_test_list() {
 
 			if [[ "$COMMUNITY" = "true" ]] ; then
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib WARSOW >> bench_warsow_${output}"
+				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib XONOTIC >> bench_xonotic_${output}"
 			fi
 
 			if [[ "$GPUTEST" = "true" ]] ; then
@@ -117,12 +118,9 @@ function populate_test_list() {
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib HEAVEN >> bench_heaven_${output}"
 			fi
 
-			if [[ "$COMMUNITY" = "true" && "$LONG" = "true" ]] ; then
-				# Xonotic takes more than 8 minutes on Braswell, so
-				# just don't run it unless the user is a super
-				# masochist.
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib XONOTIC >> bench_xonotic_${output}"
-			fi
+#			if [[ "$LONG" = "true" ]] ; then
+
+#			fi
 		done
 	done
 }
