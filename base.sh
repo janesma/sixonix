@@ -5,6 +5,9 @@
 
 VERSION="1.0"
 
+DEFAULT_RES_X=1920
+DEFAULT_RES_Y=1080
+
 # Customize this to your own environments
 GLB27_BASE=~/benchmarks/GLB27/
 GLB30_BASE=~/benchmarks/GLB30/
@@ -67,8 +70,8 @@ function get_dimensions() {
 		read RES_X RES_Y <<< $(xdpyinfo | grep dimensions | \
 			awk '{print $2}' | awk -Fx '{print $1, $2}')
 	else
-		RES_X=1920
-		RES_Y=1080
+		RES_X=$DEFAULT_RES_X
+		RES_Y=$DEFAULT_RES_Y
 	fi
 	export RES_X
 	export RES_Y
