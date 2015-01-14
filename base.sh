@@ -9,13 +9,13 @@ DEFAULT_RES_X=1920
 DEFAULT_RES_Y=1080
 
 # Customize this to your own environments
-GLB27_BASE=~/benchmarks/GLB27/
-GLB30_BASE=~/benchmarks/GLB30/
-PIGLIT_PATH=~/intel-gfx/piglit
-VALLEY_PATH=~/benchmarks/Valley-1.1-rc1/bin
-SYNMARK_PATH=~/benchmarks/Synmark2-6.00/
-HEAVEN_PATH=~/benchmarks/Heaven-4.1-rc1/
-GPUTEST_PATH=~/benchmarks/GpuTest_Linux_x64_0.7.0
+GLB27_BASE=$HOME/benchmarks/GLB27/
+GLB30_BASE=$HOME/benchmarks/GLB30/
+PIGLIT_PATH=$HOME/intel-gfx/piglit
+VALLEY_PATH=$HOME/benchmarks/Valley-1.1-rc1/bin
+SYNMARK_PATH=$HOME/benchmarks/Synmark2-6.00/
+HEAVEN_PATH=$HOME/benchmarks/Heaven-4.1-rc1/
+GPUTEST_PATH=$HOME/benchmarks/GpuTest_Linux_x64_0.7.0
 
 # Example ways to use this script:
 # Run GBM piglit with custom mesa:
