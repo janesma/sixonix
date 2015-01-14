@@ -214,7 +214,7 @@ for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 	test_name=$(echo ${TEST_LIST[i]} | awk '{print $NF}')
 
 	if [[ "$VERBOSE" = "true" ]] ; then
-		echo -n "Starting $test_name $(date +'%b %d %T') ..."
+		echo -n "Starting $test_name $(date +'%x %X') ..."
 	else
 		echo -ne "[$(($i+1)) / ${#TEST_LIST[*]}] ($test_name) \033[0K\r"
 	fi
@@ -225,7 +225,7 @@ for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 		eval ${TEST_LIST[i]} > /dev/null 2>&1
 	fi
 
-	elapsed=$(date -d @$(( $(date -d "now" +%s) - $(date -d "$before" +%s))) -u +'%H:%M:%S')
+	elapsed=$(date -d @$(( $(date -d "now" +%s) - $(date -d "$before" +%s))) -u +'%M:%S')
 	[[ "$VERBOSE" = "true" ]] && echo "elapsed: $elapsed"
 done
 
