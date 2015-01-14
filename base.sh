@@ -6,8 +6,8 @@
 VERSION="1.0"
 
 # Customize this to your own environments
-GL27_DATA_PATH=~/benchmarks/GLB27/data
-GL27_PATH=~/benchmarks/GLB27/buildES/binaries/GLBenchmark
+GLB27_BASE=~/benchmarks/GLB27/
+GLB30_BASE=~/benchmarks/GLB30/
 PIGLIT_PATH=~/intel-gfx/piglit
 VALLEY_PATH=~/benchmarks/Valley-1.1-rc1/bin
 SYNMARK_PATH=~/benchmarks/Synmark2-6.00/
@@ -25,6 +25,10 @@ GPUTEST_PATH=~/benchmarks/GpuTest_Linux_x64_0.7.0
 #	glx.sh /foo/bar/mesa/lib
 # Run GLX with menu and system mesa:
 #	base.sh
+
+GL27_DATA_PATH=$GLB27_BASE/data
+GL27_PATH=$GLB27_BASE/buildES/binaries/GLBenchmark
+GLB30_PATH=$GLB30_BASE/gfxbench-source-corporate/out/build/linux/gfxbench_Release/mainapp
 
 function heaven() {
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
@@ -128,6 +132,20 @@ $GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
 	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
 	-t GLB27_EgyptHD_inherited_C24Z16_FixedTime_Offscreen | \
 	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+
+TESTS[MANHATTAN]='
+cd $GLB30_PATH ; \
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
+MESA_GLSL_VERSION_OVERRIDE=400  \
+MESA_GL_VERSION_OVERRIDE=4.1  \
+./mainapp -t gl_manhattan -w $RES_X -h $RES_Y'
+
+TESTS[MANHATTAN_O]='
+cd $GLB30_PATH ; \
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
+MESA_GLSL_VERSION_OVERRIDE=400  \
+MESA_GL_VERSION_OVERRIDE=4.1  \
+./mainapp -t gl_manhattan_off -w $RES_X -h $RES_Y'
 
 TESTS[VALLEY]='cd $VALLEY_PATH ; valley | grep -i fps | awk "{print \$2}"'
 TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps  | awk "{print \$2}"'
