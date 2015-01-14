@@ -96,6 +96,24 @@ function gbm_env() {
 	export PIGLIT_PLATFORM=gbm
 }
 
+synmark_cfg=""
+
+function init_synmark() {
+	# Create a synmark config file with the proper resolutions
+	[[ -n $synmark_cfg ]] && echo "Synmark init can only be called once" && exit -1
+	get_dimensions
+	#synmark requires configs to be specified as "-name" without .cfg, but
+	#the file must actually be named.cfg
+	synmark_cfg=$(mktemp -p $SYNMARK_PATH --suffix=.cfg)
+	echo "FullScreen = 1;" >> $synmark_cfg
+	echo "ScreenWidth = ${RES_X};" >> $synmark_cfg
+	echo "ScreenHeight = ${RES_Y};" >> $synmark_cfg
+	echo "RenderingTime = 5.0;" >> $synmark_cfg
+	echo "ValidateImage = 0;" >> $synmark_cfg
+
+	echo $synmark_cfg #return to caller
+}
+
 SCRIPT_PATH=$(dirname $BASH_SOURCE)
 declare -A TESTS
 TESTS[XONOTIC]='
@@ -155,7 +173,7 @@ TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps  | awk "{print \$2}"'
 
 #Be careful. I sed this, so newlines don't work easily
 TESTS[SYNMARK]='
-cd $SYNMARK_PATH ; $SYNMARK_PATH/synmark2 TESTNAMEHERE | grep FPS | awk "{print \$2}"'
+cd $SYNMARK_PATH ; $SYNMARK_PATH/synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
 
 TESTS[FUR]='
 $GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
@@ -216,7 +234,9 @@ if [[ $# -eq 0 ]];  then
 else
 	if [[ "$1" = "SYNMARK" ]] ; then
 		syn_test=$2
+		synmark_cfg=$3
 		cmd=${TESTS[$1]/TESTNAMEHERE/$syn_test}
+		cmd=${cmd/TESTCONFIGHERE/-$(basename -s .cfg $synmark_cfg)}
 		shift
 		shift
 		eval $cmd
