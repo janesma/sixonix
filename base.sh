@@ -175,7 +175,7 @@ TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps  | awk "{print \$2}"'
 
 #Be careful. I sed this, so newlines don't work easily
 TESTS[SYNMARK]='
-cd $SYNMARK_PATH ; $SYNMARK_PATH/synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
+cd $SYNMARK_PATH ; ./synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
 
 TESTS[FUR]='
 cd $GPUTEST_PATH ; \
