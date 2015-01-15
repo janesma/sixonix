@@ -212,6 +212,11 @@ shift "$((OPTIND-1))" # Shift off the options and optional --.
 
 if [[ "$SYNMARK" = "true" ]] ; then
 	source ${GLX_RUNNER}
+	# We could allow the benchmark runner do the temp file for us for each
+	# synmark, but we can also generate it once and pass it in. Doing this
+	# is a bit ugly since initializing synmark requires getting the
+	# resolution early
+	get_dimensions
 	synmark_cfg=$(init_synmark)
 	[[ "$VERBOSE" = "true" ]] && cat $synmark_cfg
 fi
