@@ -56,6 +56,8 @@ function populate_test_list() {
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib EGYPT_O | tee bench_egyptoff_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX | tee bench_trex_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX_O | tee bench_trexoff_${output}"
+				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN | tee bench_manhattan_${output}"
+				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | tee bench_manhattanoff_${output}"
 			fi
 
 			if [[ "$COMMUNITY" = "true" ]] ; then
