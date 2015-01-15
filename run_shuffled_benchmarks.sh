@@ -45,90 +45,81 @@ function shuffle() {
 #synmark_cfg=""
 
 function populate_test_list() {
-	local RUNS=$1
-	local ndx=0
-	for ((i=1;i<=RUNS;i++)); do
-		for mesa in $MESA_LIBS; do
-			output=$(basename $mesa)
+	local mesa=$1
+	local output=$2
 
-			if [[ "$GLBENCH" = "true" ]] ; then
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib EGYPT | tee -a bench_egypt_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib EGYPT_O | tee -a bench_egyptoff_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX | tee -a bench_trex_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX_O | tee -a bench_trexoff_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN | tee -a bench_manhattan_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | tee -a bench_manhattanoff_${output}"
-			fi
+	if [[ "$GLBENCH" = "true" ]] ; then
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib EGYPT | tee -a bench_egypt_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib EGYPT_O | tee -a bench_egyptoff_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX | tee -a bench_trex_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX_O | tee -a bench_trexoff_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN | tee -a bench_manhattan_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | tee -a bench_manhattanoff_${output}"
+	fi
 
-			if [[ "$COMMUNITY" = "true" ]] ; then
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib WARSOW | tee -a bench_warsow_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib XONOTIC | tee -a bench_xonotic_${output}"
-			fi
+	if [[ "$COMMUNITY" = "true" ]] ; then
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib WARSOW | tee -a bench_warsow_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib XONOTIC | tee -a bench_xonotic_${output}"
+	fi
 
-			if [[ "$GPUTEST" = "true" ]] ; then
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib FUR | tee -a bench_fur_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib PLOT3D | tee -a bench_plot3d_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TRIANGLE | tee -a bench_triangle_${output}"
-			fi
+	if [[ "$GPUTEST" = "true" ]] ; then
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib FUR | tee -a bench_fur_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib PLOT3D | tee -a bench_plot3d_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TRIANGLE | tee -a bench_triangle_${output}"
+	fi
 
-			if [[ "$SYNMARK" = "true" ]] ; then
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillPixel ${synmark_cfg} | tee -a bench_OglFillPixel_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillTexMulti ${synmark_cfg} | tee -a bench_OglFillTexMulti_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillTexSingle ${synmark_cfg} | tee -a bench_OglFillTexSingle_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexFilterAniso ${synmark_cfg} | tee -a bench_OglTexFilterAniso_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexFilterTri ${synmark_cfg} | tee -a bench_OglTexFilterTri_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexMem128 ${synmark_cfg} | tee -a bench_OglTexMem128_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexMem512 ${synmark_cfg} | tee -a bench_OglTexMem512_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomPoint ${synmark_cfg} | tee -a bench_OglGeomPoint_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomTriList ${synmark_cfg} | tee -a bench_OglGeomTriList_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomTriStrip ${synmark_cfg} | tee -a bench_OglGeomTriStrip_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglZBuffer ${synmark_cfg} | tee -a bench_OglZBuffer_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch0 ${synmark_cfg} | tee -a bench_OglBatch0_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch1 ${synmark_cfg} | tee -a bench_OglBatch1_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch2 ${synmark_cfg} | tee -a bench_OglBatch2_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch3 ${synmark_cfg} | tee -a bench_OglBatch3_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch4 ${synmark_cfg} | tee -a bench_OglBatch4_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch5 ${synmark_cfg} | tee -a bench_OglBatch5_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch6 ${synmark_cfg} | tee -a bench_OglBatch6_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch7 ${synmark_cfg} | tee -a bench_OglBatch7_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSDiffuse1 ${synmark_cfg} | tee -a bench_OglVSDiffuse1_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSDiffuse8 ${synmark_cfg} | tee -a bench_OglVSDiffuse8_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSTangent ${synmark_cfg} | tee -a bench_OglVSTangent_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSInstancing ${synmark_cfg} | tee -a bench_OglVSInstancing_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSPhong ${synmark_cfg} | tee -a bench_OglPSPhong_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSBump2 ${synmark_cfg} | tee -a bench_OglPSBump2_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSBump8 ${synmark_cfg} | tee -a bench_OglPSBump8_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSPom ${synmark_cfg} | tee -a bench_OglPSPom_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglShMapPcf ${synmark_cfg} | tee -a bench_OglShMapPcf_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglShMapVsm ${synmark_cfg} | tee -a bench_OglShMapVsm_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglCSCloth ${synmark_cfg} | tee -a bench_OglCSCloth_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglOclCloth ${synmark_cfg} | tee -a bench_OglOclCloth_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglCSDof ${synmark_cfg} | tee -a bench_OglCSDof_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglOclDof ${synmark_cfg} | tee -a bench_OglOclDof_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDeferred ${synmark_cfg} | tee -a bench_OglDeferred_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDeferredAA ${synmark_cfg} | tee -a bench_OglDeferredAA_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglHdrBloom ${synmark_cfg} | tee -a bench_OglHdrBloom_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglMultithread ${synmark_cfg} | tee -a bench_OglMultithread_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainPanInst ${synmark_cfg} | tee -a bench_OglTerrainPanInst_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyInst ${synmark_cfg} | tee -a bench_OglTerrainFlyInst_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainPanTess ${synmark_cfg} | tee -a bench_OglTerrainPanTess_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyTess ${synmark_cfg} | tee -a bench_OglTerrainFlyTess_${output}"
-				#TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvState ${synmark_cfg} | tee -a bench_OglDrvState_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvShComp ${synmark_cfg} | tee -a bench_OglDrvShComp_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvRes ${synmark_cfg} | tee -a bench_OglDrvRes_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvCtx ${synmark_cfg} | tee -a bench_OglDrvCtx_${output}"
-			fi
+	if [[ "$SYNMARK" = "true" ]] ; then
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillPixel ${synmark_cfg} | tee -a bench_OglFillPixel_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillTexMulti ${synmark_cfg} | tee -a bench_OglFillTexMulti_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillTexSingle ${synmark_cfg} | tee -a bench_OglFillTexSingle_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexFilterAniso ${synmark_cfg} | tee -a bench_OglTexFilterAniso_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexFilterTri ${synmark_cfg} | tee -a bench_OglTexFilterTri_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexMem128 ${synmark_cfg} | tee -a bench_OglTexMem128_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexMem512 ${synmark_cfg} | tee -a bench_OglTexMem512_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomPoint ${synmark_cfg} | tee -a bench_OglGeomPoint_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomTriList ${synmark_cfg} | tee -a bench_OglGeomTriList_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomTriStrip ${synmark_cfg} | tee -a bench_OglGeomTriStrip_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglZBuffer ${synmark_cfg} | tee -a bench_OglZBuffer_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch0 ${synmark_cfg} | tee -a bench_OglBatch0_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch1 ${synmark_cfg} | tee -a bench_OglBatch1_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch2 ${synmark_cfg} | tee -a bench_OglBatch2_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch3 ${synmark_cfg} | tee -a bench_OglBatch3_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch4 ${synmark_cfg} | tee -a bench_OglBatch4_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch5 ${synmark_cfg} | tee -a bench_OglBatch5_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch6 ${synmark_cfg} | tee -a bench_OglBatch6_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch7 ${synmark_cfg} | tee -a bench_OglBatch7_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSDiffuse1 ${synmark_cfg} | tee -a bench_OglVSDiffuse1_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSDiffuse8 ${synmark_cfg} | tee -a bench_OglVSDiffuse8_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSTangent ${synmark_cfg} | tee -a bench_OglVSTangent_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSInstancing ${synmark_cfg} | tee -a bench_OglVSInstancing_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSPhong ${synmark_cfg} | tee -a bench_OglPSPhong_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSBump2 ${synmark_cfg} | tee -a bench_OglPSBump2_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSBump8 ${synmark_cfg} | tee -a bench_OglPSBump8_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSPom ${synmark_cfg} | tee -a bench_OglPSPom_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglShMapPcf ${synmark_cfg} | tee -a bench_OglShMapPcf_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglShMapVsm ${synmark_cfg} | tee -a bench_OglShMapVsm_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglCSCloth ${synmark_cfg} | tee -a bench_OglCSCloth_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglOclCloth ${synmark_cfg} | tee -a bench_OglOclCloth_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglCSDof ${synmark_cfg} | tee -a bench_OglCSDof_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglOclDof ${synmark_cfg} | tee -a bench_OglOclDof_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDeferred ${synmark_cfg} | tee -a bench_OglDeferred_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDeferredAA ${synmark_cfg} | tee -a bench_OglDeferredAA_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglHdrBloom ${synmark_cfg} | tee -a bench_OglHdrBloom_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglMultithread ${synmark_cfg} | tee -a bench_OglMultithread_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainPanInst ${synmark_cfg} | tee -a bench_OglTerrainPanInst_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyInst ${synmark_cfg} | tee -a bench_OglTerrainFlyInst_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainPanTess ${synmark_cfg} | tee -a bench_OglTerrainPanTess_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyTess ${synmark_cfg} | tee -a bench_OglTerrainFlyTess_${output}"
+		#TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvState ${synmark_cfg} | tee -a bench_OglDrvState_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvShComp ${synmark_cfg} | tee -a bench_OglDrvShComp_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvRes ${synmark_cfg} | tee -a bench_OglDrvRes_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvCtx ${synmark_cfg} | tee -a bench_OglDrvCtx_${output}"
+	fi
 
-			if [[ "$UNIGINE" = "true" ]] ; then
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib VALLEY | tee -a bench_valley_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib HEAVEN | tee -a bench_heaven_${output}"
-			fi
-
-#			if [[ "$LONG" = "true" ]] ; then
-
-#			fi
-		done
-	done
+	if [[ "$UNIGINE" = "true" ]] ; then
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib VALLEY | tee -a bench_valley_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib HEAVEN | tee -a bench_heaven_${output}"
+	fi
 }
 
 if [[ $# -ne 0 ]] ; then
@@ -229,7 +220,14 @@ if [[ "$SYNMARK" = "true" ]] ; then
 	[[ "$VERBOSE" = "true" ]] && cat $synmark_cfg
 fi
 
-populate_test_list ${ITERATIONS}
+ndx=0
+for ((i=1;i<=ITERATIONS;i++)); do
+	for mesa in $MESA_LIBS; do
+		output=$(basename $mesa)
+		populate_test_list $mesa $output
+	done
+done
+
 shuffle
 
 for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
