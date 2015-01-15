@@ -237,7 +237,6 @@ if [[ $# -eq 0 ]];  then
 else
 	if [[ "$1" = "SYNMARK" ]] ; then
 		syn_test=$2
-		set -x
 		if [[ $# -eq 3 ]] ; then
 			synmark_cfg="-$(basename -s .cfg $3)"
 		else
