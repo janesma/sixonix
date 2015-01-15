@@ -49,8 +49,9 @@ function valley() {
 }
 
 function init() {
-	xset -dpms; xset s off
-	xscreen=$(which xscreensaver-command 2>/dev/null)
+	local xset=$(which xset 2>/dev/null)
+	[[ $? -eq 0 ]] && $xset -dpms; $xset s off
+	local xscreen=$(which xscreensaver-command 2>/dev/null)
 	[[ $? -eq 0 ]] && eval "${xscreen} -deactivate >/dev/null 2>&1"
 }
 
