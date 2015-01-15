@@ -111,7 +111,7 @@ function populate_test_list() {
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyInst ${synmark_cfg} | tee bench_OglTerrainFlyInst_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainPanTess ${synmark_cfg} | tee bench_OglTerrainPanTess_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyTess ${synmark_cfg} | tee bench_OglTerrainFlyTess_${output}"
-				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvState ${synmark_cfg} | tee bench_OglDrvState_${output}"
+				#TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvState ${synmark_cfg} | tee bench_OglDrvState_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvShComp ${synmark_cfg} | tee bench_OglDrvShComp_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvRes ${synmark_cfg} | tee bench_OglDrvRes_${output}"
 				TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDrvCtx ${synmark_cfg} | tee bench_OglDrvCtx_${output}"
