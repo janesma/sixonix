@@ -176,21 +176,24 @@ TESTS[SYNMARK]='
 cd $SYNMARK_PATH ; $SYNMARK_PATH/synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
 
 TESTS[FUR]='
-$GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
+cd $GPUTEST_PATH ; \
+./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=fur | \
-	grep FPS |awk "{gsub(/\)\$/,\"\"); print \$5}"'
+	grep Score |  awk "{print \$2}"'
 
 TESTS[PLOT3D]='
-$GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
+cd $GPUTEST_PATH ; \
+./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=plot3d | \
 	grep Score |  awk "{print \$2}"'
 
 TESTS[TRIANGLE]='
-$GPUTEST_PATH/GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
+cd $GPUTEST_PATH ; \
+./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=triangle |
