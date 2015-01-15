@@ -34,18 +34,22 @@ GL27_PATH=$GLB27_BASE/buildES/binaries/GLBenchmark
 GLB30_PATH=$GLB30_BASE/gfxbench-source-corporate/out/build/linux/gfxbench_Release/mainapp
 
 function heaven() {
+	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
 	./bin/heaven_x64 -video_app opengl -data_path ../ -sound_app null \
 		-engine_config ../data/heaven_4.0.cfg -video_multisample 0 \
 		-system_script heaven/unigine.cpp -video_mode -1 -video_fullscreen 1 \
 		-extern_define PHORONIX,RELEASE
+	set +o nounset
 }
 
 function valley() {
+	set -o nounset
 	./valley_x64 -project_name Valley -data_path ../ -engine_config \
 		../data/valley_1.1.cfg -system_script valley/unigine.cpp \
 		-sound_app null -video_app opengl -video_multisample 0 \
 		-video_mode -1 -video_fullscreen 1 -extern_define PHORONIX,RELEASE
+	set +o nounset
 }
 
 function init() {
@@ -84,6 +88,7 @@ function glx_env() {
 	export LD_LIBRARY_PATH=${1}
 	export LIBGL_DRIVERS_PATH=${1}/dri
 	export DISPLAY=:0
+	set +o nounset
 	[[ -z $RES_X ]] && get_dimensions
 }
 
@@ -244,14 +249,18 @@ else
 			#FIXME: leaves a tmp file
 			synmark_cfg="-$(basename -s .cfg $(init_synmark))"
 		fi
+		set -o nounset
 		cmd=${TESTS[$1]/TESTNAMEHERE/$syn_test}
 		cmd=${cmd/TESTCONFIGHERE/$synmark_cfg}
+		set +o nounset
 		shift
 		shift
 		eval $cmd
 	else
 		index=$1
 		shift
+		set -o nounset
 		eval "${TESTS[$index]} $*"
+		set +o nounset
 	fi
 fi
