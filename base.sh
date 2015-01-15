@@ -166,7 +166,7 @@ cd $GLB30_PATH ; \
 	MESA_GLSL_VERSION_OVERRIDE=400  \
 	MESA_GL_VERSION_OVERRIDE=4.1  \
 	./mainapp -t gl_manhattan -w $RES_X -h $RES_Y | \
-	grep score | awk "{print \$2}" | sed "s/,//"'
+	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
 TESTS[MANHATTAN_O]='
 cd $GLB30_PATH ; \
@@ -174,7 +174,7 @@ cd $GLB30_PATH ; \
 	MESA_GLSL_VERSION_OVERRIDE=400  \
 	MESA_GL_VERSION_OVERRIDE=4.1  \
 	./mainapp -t gl_manhattan_off -w $RES_X -h $RES_Y | \
-	grep score | awk "{print \$2}" | sed "s/,//"'
+	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
 TESTS[VALLEY]='cd $VALLEY_PATH ; valley | grep -i fps | awk "{print \$2}"'
 TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps  | awk "{print \$2}"'
