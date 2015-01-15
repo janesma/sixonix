@@ -53,6 +53,7 @@ function valley() {
 }
 
 function init() {
+	[[ -z $DISPLAY ]] && echo "Inappropriate call to init" && exit 1
 	if hash xset 2>/dev/null; then
 		xset -dpms; xset s off
 	fi
