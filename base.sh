@@ -212,8 +212,6 @@ if [[ $# && "$1" = "-v" ]] ; then
 	exit 0
 fi
 
-env_sanitize
-
 # IF our script name was gbm.sh, setup the GBM environment. If it was named
 # glx, then do the usual thing. Default to local mesa install
 script_name=`basename $0`
