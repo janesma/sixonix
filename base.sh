@@ -240,7 +240,8 @@ else
 		if [[ $# -eq 3 ]] ; then
 			synmark_cfg="-$(basename -s .cfg $3)"
 		else
-			synmark_cfg=""
+			#FIXME: leaves a tmp file
+			synmark_cfg="-$(basename -s .cfg $(init_synmark))"
 		fi
 		cmd=${TESTS[$1]/TESTNAMEHERE/$syn_test}
 		cmd=${cmd/TESTCONFIGHERE/$synmark_cfg}
