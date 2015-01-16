@@ -205,7 +205,7 @@ while getopts "AQgsucGdlhni:v" opt; do
 		   SYNMARK="true" # This is a lie
 		   QUICK="true"
 		   POST_DELETE="true"
-		   ;&
+		   ;;
 
 		g) GLBENCH="true" ;;
 		s) SYNMARK="true" ;;
