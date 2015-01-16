@@ -44,7 +44,7 @@ function shuffle() {
 # the -u saves us.
 #synmark_cfg=""
 
-function populate_test_list() {
+function populate_full_test_list() {
 	local mesa=$1
 	local output=$2
 
@@ -122,6 +122,28 @@ function populate_test_list() {
 	fi
 }
 
+function populate_quick_test_list() {
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX | $TEE bench_trex_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | $TEE bench_manhattanoff_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib PLOT3D | $TEE bench_plot3d_${output}"
+
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillPixel ${synmark_cfg} | $TEE bench_OglFillPixel_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTexMem512 ${synmark_cfg} | $TEE bench_OglTexMem512_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomPoint ${synmark_cfg} | $TEE bench_OglGeomPoint_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglGeomTriList ${synmark_cfg} | $TEE bench_OglGeomTriList_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglZBuffer ${synmark_cfg} | $TEE bench_OglZBuffer_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglBatch7 ${synmark_cfg} | $TEE bench_OglBatch7_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSDiffuse8 ${synmark_cfg} | $TEE bench_OglVSDiffuse8_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglVSInstancing ${synmark_cfg} | $TEE bench_OglVSInstancing_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSPhong ${synmark_cfg} | $TEE bench_OglPSPhong_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSBump2 ${synmark_cfg} | $TEE bench_OglPSBump2_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglPSPom ${synmark_cfg} | $TEE bench_OglPSPom_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglShMapPcf ${synmark_cfg} | $TEE bench_OglShMapPcf_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglDeferred ${synmark_cfg} | $TEE bench_OglDeferred_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglHdrBloom ${synmark_cfg} | $TEE bench_OglHdrBloom_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglTerrainFlyInst ${synmark_cfg} | $TEE bench_OglTerrainFlyInst_${output}"
+}
+
 if [[ $# -ne 0 ]] ; then
 	# If the user specified any arguments, set everything to false
 	GLBENCH="false"
@@ -151,6 +173,7 @@ function usage() {
 	local script_name=$1
 	echo Usage: $script_name [-AgsucGdlhnv] [-i iterations] 1>&2
 	echo -e "\t-A: Run all tests"
+	echo -e "\t-Q: Run a quick set of tests"
 	echo -e "\t-g: Run glbench tests"
 	echo -e "\t-s: Run synmark tests"
 	echo -e "\t-c: Run community tests"
@@ -165,7 +188,7 @@ function usage() {
 	echo "Specifying any arguments will set all things to false"
 }
 
-while getopts "AgsucGdlhni:v" opt; do
+while getopts "AQgsucGdlhni:v" opt; do
 	case "$opt" in
 		A)
 			GLBENCH="true"
@@ -178,6 +201,12 @@ while getopts "AgsucGdlhni:v" opt; do
 			ITERATIONS=5
 			POST_DELETE="true"
 			;;
+		Q) ITERATIONS=2
+		   SYNMARK="true" # This is a lie
+		   QUICK="true"
+		   POST_DELETE="true"
+		   ;&
+
 		g) GLBENCH="true" ;;
 		s) SYNMARK="true" ;;
 		G) GPUTEST="true" ;;
@@ -212,7 +241,6 @@ source ${GLX_RUNNER}
 glx_env FAKE_PATH
 
 init
-
 export SKIP_RUNNER_INIT=1
 
 if [[ "$SYNMARK" = "true" ]] ; then
@@ -224,7 +252,11 @@ ndx=0
 for ((i=1;i<=ITERATIONS;i++)); do
 	for mesa in $MESA_LIBS; do
 		output=$(basename $mesa)
-		populate_test_list $mesa $output
+		if [[ -z $QUICK ]] ; then
+			populate_full_test_list $mesa $output
+		else
+			populate_quick_test_list
+		fi
 	done
 done
 
