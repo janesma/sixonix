@@ -17,6 +17,7 @@ SYNMARK_PATH=$HOME/benchmarks/Synmark2-6.00/
 HEAVEN_PATH=$HOME/benchmarks/Heaven-4.1-rc1/
 GPUTEST_PATH=$HOME/benchmarks/GpuTest_Linux_x64_0.7.0
 XONOTIC_PATH=$HOME/benchmarks/Xonotic
+WARSOW_PATH=$HOME/benchmarks/warsow_15
 
 # Example ways to use this script:
 # Run GBM piglit with custom mesa:
@@ -129,9 +130,8 @@ declare -A TESTS
 TESTS[XONOTIC]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null |  egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 
 TESTS[WARSOW]='
-warsow +exec high+.cfg +timedemo 1 +seta vid_mode -2 +seta vid_fullscreen 1 \
-	+set timedemo 1 +exec profiles/high+.cfg +seta cg_showspeed 1 \
-	+demo benchsow.wdz20 \
+$WARSOW_PATH/warsow -nosound +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 0 \
+	+set timedemo 1 +exec sixonix.cfg +demo benchsow.wdz20  \
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
 TESTS[TREX]='
