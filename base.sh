@@ -16,6 +16,7 @@ VALLEY_PATH=$HOME/benchmarks/Valley-1.1-rc1/bin
 SYNMARK_PATH=$HOME/benchmarks/Synmark2-6.00/
 HEAVEN_PATH=$HOME/benchmarks/Heaven-4.1-rc1/
 GPUTEST_PATH=$HOME/benchmarks/GpuTest_Linux_x64_0.7.0
+XONOTIC_PATH=$HOME/benchmarks/Xonotic
 
 # Example ways to use this script:
 # Run GBM piglit with custom mesa:
@@ -125,13 +126,7 @@ function init_synmark() {
 
 SCRIPT_PATH=$(dirname $BASH_SOURCE)
 declare -A TESTS
-TESTS[XONOTIC]='
-xonotic-glx -benchmark demos/the-big-keybench 2>&1 | \
-	egrep -e "[0-9]+ frames" | awk "{print \$5}"'
-
-TESTS[QA_XONOTIC]='
-xonotic-glx -nohome -benchmark demos/the-big-keybench \
-	+r_glsl 1 +vid_width $RES_X +vid_height $RES_Y +exec effects-low.cfg'
+TESTS[XONOTIC]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null |  egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 
 TESTS[WARSOW]='
 warsow +exec high+.cfg +timedemo 1 +seta vid_mode -2 +seta vid_fullscreen 1 \
