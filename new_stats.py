@@ -28,6 +28,7 @@ def determine_significance(mesa):
         averages.append(np.average(d))
 
     # FIXME: support more than 2
+    assert(len(averages) == 2)
     diff = np.diff(averages)
     averages.append(diff)
     return np.round(averages, 3)
