@@ -123,6 +123,9 @@ function populate_full_test_list() {
 }
 
 function populate_quick_test_list() {
+	local mesa=$1
+	local output=$2
+
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX | $TEE bench_trex_${output}"
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | $TEE bench_manhattanoff_${output}"
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib PLOT3D | $TEE bench_plot3d_${output}"
@@ -255,7 +258,7 @@ for ((i=1;i<=ITERATIONS;i++)); do
 		if [[ -z $QUICK ]] ; then
 			populate_full_test_list $mesa $output
 		else
-			populate_quick_test_list
+			populate_quick_test_list $mesa $output
 		fi
 	done
 done
