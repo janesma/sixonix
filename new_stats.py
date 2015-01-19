@@ -69,7 +69,6 @@ def parse_results():
                     'bench' : benchmark_name,
                     'filename' : filename,
                     'values': np.around(np.loadtxt(filename, dtype=np.dtype(np.float32)), 3)}
-            row[benchmark_name].name = benchmark_name
             mesas.append(mesa_version)
             benchmarks.append(benchmark_name)
             assert(useless == "bench")
@@ -103,6 +102,6 @@ def print_results2(mesa, benchmarks, database):
 if __name__ == "__main__":
     parse_results()
     mesas, benchmarks, database = parse_results()
-    print_results2(mesas, benchmarks, database)
-    #print_results(mesas, benchmarks, database)
+    #print_results2(mesas, benchmarks, database)
+    print_results(mesas, benchmarks, database)
 #   run_column(do_the_numbers())
