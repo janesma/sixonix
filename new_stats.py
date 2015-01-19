@@ -2,6 +2,8 @@
 
 import os
 import subprocess
+import itertools
+import struct
 import numpy as np
 import scipy as sp
 from scipy import stats
@@ -21,31 +23,10 @@ def statistically_signficant(x, y):
 #    print('Probability that there is difference (RELATED): %.3f%%' % prob)
     return True
 
-def determine_significance(mesa):
-    averages=[]
-    for files in sorted(mesa):
-        d = np.loadtxt(files)
-        averages.append(np.average(d))
+def determine_significance(mesa1, mesa2):
+    return True
 
-    # FIXME: support more than 2
-    assert(len(averages) == 2)
-    diff = np.diff(averages)
-    averages.append(diff)
-    return np.round(averages, 3)
-
-def run_column(string):
-    p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
-    p.communicate(bytes(string, "utf-8"))
-
-def do_the_numbers():
-    benchmarks = defaultdict(list)
-    mesas = set()
-    for filename in os.listdir('.'):
-        if '_' in filename:
-            useless, benchmark_name, mesa_version = filename.split('_')
-            benchmarks[benchmark_name].append(filename)
-            mesas.add(mesa_version)
-
+def do_the_numbers(mesas):
     OUTPUT="benchmark "
     for mesa in mesas:
         OUTPUT += str(mesa) + " "
@@ -64,6 +45,64 @@ def do_the_numbers():
 
     return OUTPUT
 
+def run_column(string):
+    p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
+    p.communicate(bytes(string, "utf-8"))
+
+def process(mesas, benchmarks, database):
+    # Numpy parses whole numbers as xxx. which doesn't work for scipy
+    with np.errstate(invalid='ignore'):
+        for r in itertools.product(mesas, benchmarks):
+            cell = database[r[1]][r[0]]
+            cell['average'] = np.average(cell['values'])
+            cell['stats']=stats.describe(cell['values'])
+
+def parse_results():
+    database = defaultdict(defaultdict)
+    mesas = list()
+    benchmarks = list()
+    for filename in os.listdir('.'):
+        if '_' in filename:
+            useless, benchmark_name, mesa_version = filename.split('_')
+            database[benchmark_name][mesa_version] = {
+                    'name' : mesa_version,
+                    'bench' : benchmark_name,
+                    'filename' : filename,
+                    'values': np.around(np.loadtxt(filename, dtype=np.dtype(np.float32)), 3)}
+            row[benchmark_name].name = benchmark_name
+            mesas.append(mesa_version)
+            benchmarks.append(benchmark_name)
+            assert(useless == "bench")
+
+    mesas = np.unique(mesas)
+    benchmarks = np.unique(benchmarks)
+    process(mesas, benchmarks, database)
+
+    return (mesas, benchmarks, database)
+
+def print_results(mesa, benchmarks, database):
+    OUTPUT="benchmark "
+    for mesa in mesas:
+        OUTPUT += str(mesa) + " "
+    OUTPUT += '\n'
+    for bench in benchmarks:
+        OUTPUT += bench + " "
+        for mesa in mesas:
+            OUTPUT+=str(database[bench][mesa]['average']) + " "
+        OUTPUT += '\n'
+
+    run_column(OUTPUT)
+
+def print_results2(mesa, benchmarks, database):
+    for bench in benchmarks:
+        for key, value in database[bench].items():
+            print(key)
+            print(value['average'])
+            print(value['bench'])
 
 if __name__ == "__main__":
-    run_column(do_the_numbers())
+    parse_results()
+    mesas, benchmarks, database = parse_results()
+    print_results2(mesas, benchmarks, database)
+    #print_results(mesas, benchmarks, database)
+#   run_column(do_the_numbers())
