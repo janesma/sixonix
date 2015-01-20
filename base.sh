@@ -61,7 +61,7 @@ function jordanatic() {
 	rm -f data/engine.log
 
 	# for next version of benchmark: remove +cl_playerdetailreduction 0 and add +showfps 1
-	p="+vid_width $RES_X +vid_height $RES_Y +vid_desktopfullscreen 0 +cl_curl_enabled 0 +r_texture_dds_load 1 +cl_playerdetailreduction 0 +developer 1 -nosound-nohome -benchmarkruns 4 -benchmarkruns_skipfirst -benchmark demos/jordanatic.dem"
+	p="+vid_width $RES_X +vid_height $RES_Y +vid_desktopfullscreen 0 +cl_curl_enabled 0 +r_texture_dds_load 1 +cl_playerdetailreduction 0 +developer 1 -nosound -nohome -benchmarkruns 4 -benchmarkruns_skipfirst -benchmark demos/jordanatic.dem"
 
 	for e in ${1}; do
 		echo "Benchmarking on $e"
