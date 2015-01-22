@@ -1,63 +1,82 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+"""This scripts helps generate statistics from a benchmark run. The helper
+functions may be used independently if desired."""
 
 import os
 import subprocess
 import itertools
-import struct
+import math
 import numpy as np
-import scipy as sp
 from scipy import stats
-from scipy.stats import norm
+from scipy.stats import chi2
 
 from collections import defaultdict
+from collections import namedtuple
 
-def statistically_signficant(x, y):
-#    x = np.array([22.6195, 22.8267, 22.7055, 22.6648])
-#    y = np.array([22.6868, 23.0453, 22.8111, 22.8756])
-#    nobs, minmax, mean, variance, skewness, kurtosis = stats.describe(x)
-#    t, prob = stats.ttest_ind(x, y)
-#    print('Probability that there is difference (INDEPENDENT): %.3f%%' % prob)
-#    t, prob = stats.ttest_ind(x, y, equal_var=False)
-#    print('Probability that there is difference (WELCH): %.3f%%' % prob)
-#    t, prob = stats.ttest_rel(x, y)
-#    print('Probability that there is difference (RELATED): %.3f%%' % prob)
-    return True
+
+def chisquare_critical(confidence, df):
+    # There must be a better way to get the critical value of chi-square.
+    s = math.sqrt(chi2.ppf(confidence, 1))
+    conf_int = chi2.cdf(s**2, 1)
+    chi_squared = chi2.ppf(conf_int, df-1)
+    return chi_squared
+
+
+def is_equal_variance(mesa1, mesa2):
+    # http://www.itl.nist.gov/div898/handbook/eda/section3/eda357.htm
+    T, _p = stats.bartlett(mesa1, mesa2)
+    # FIXME: is .95 always safe?
+    x2 = chisquare_critical(.95, len(mesa1))
+    return T <= x2
+
 
 def determine_significance(mesa1, mesa2):
-    return True
+    # TODO: if the user wants to verify a test, or set of tests, they may use
+    # the same mesa, for that you would want:
+    # stats.ttest_rel(x, y)
 
-def do_the_numbers(mesas):
-    OUTPUT="benchmark "
-    for mesa in mesas:
-        OUTPUT += str(mesa) + " "
-    OUTPUT += "diff"
-    OUTPUT += "%"
-    OUTPUT += '\n'
+    # equal sample size, and equal variance (Independent t-test). It appears
+    # scipy supports unequal sample sizes implicitly
+    # http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
 
-    for bench in sorted(benchmarks, key=str.lower):
-        OUTPUT += str(bench) + " "
-        col1, col2, diff = determine_significance(benchmarks[bench])
-        OUTPUT += str(col1) + " "
-        OUTPUT += str(col2) + " "
-        OUTPUT += str(diff) + " "
-        OUTPUT += str(np.round(diff/col1, 2)) + " "
-        OUTPUT += '\n'
+    # unequal sample size or unequal variance (Welch)
+    # http://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes.2C_unequal_variances
+    t, p = stats.ttest_ind(mesa1, mesa2,
+                           equal_var=is_equal_variance(mesa1, mesa2))
+    return p
 
-    return OUTPUT
 
 def run_column(string):
     p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
     p.communicate(bytes(string, "utf-8"))
 
-def process(mesas, benchmarks, database):
+
+def process(retrows, mesas, benchmarks, database):
     # Numpy parses whole numbers as xxx. which doesn't work for scipy
     with np.errstate(invalid='ignore'):
         for r in itertools.product(mesas, benchmarks):
             cell = database[r[1]][r[0]]
             cell['average'] = np.average(cell['values'])
-            cell['stats']=stats.describe(cell['values'])
+            cell['stats'] = stats.describe(cell['values'])
 
-def parse_results():
+    for bench in benchmarks:
+        i = 0
+        x = {}
+        for mesa in mesas:
+            cell = database[bench][mesa]
+            x[i] = cell['values']
+            # print(stats.describe(x[i]))
+            i = i+1
+        p_value = determine_significance(x[0], x[1])
+        mesa1 = database[bench][mesas[0]]
+        mesa2 = database[bench][mesas[1]]
+        row = Row(bench, mesa1['average'], mesa2['average'],
+                  mesa2['average'] - mesa1['average'],
+                  p_value < CONFIDENCE_INTERVAL)
+        retrows.append(row)
+
+
+def parse_results(retrows):
     database = defaultdict(defaultdict)
     mesas = list()
     benchmarks = list()
@@ -65,43 +84,36 @@ def parse_results():
         if '_' in filename:
             useless, benchmark_name, mesa_version = filename.split('_')
             database[benchmark_name][mesa_version] = {
-                    'name' : mesa_version,
-                    'bench' : benchmark_name,
-                    'filename' : filename,
-                    'values': np.around(np.loadtxt(filename, dtype=np.dtype(np.float32)), 3)}
+                'name': mesa_version,
+                'bench': benchmark_name,
+                'filename': filename,
+                'values': np.around(np.loadtxt(filename,
+                                    dtype=np.dtype(np.float32)), 3)}
             mesas.append(mesa_version)
             benchmarks.append(benchmark_name)
             assert(useless == "bench")
 
     mesas = np.unique(mesas)
     benchmarks = np.unique(benchmarks)
-    process(mesas, benchmarks, database)
+    process(retrows, mesas, benchmarks, database)
 
     return (mesas, benchmarks, database)
 
-def print_results(mesa, benchmarks, database):
-    OUTPUT="benchmark "
-    for mesa in mesas:
-        OUTPUT += str(mesa) + " "
-    OUTPUT += '\n'
-    for bench in benchmarks:
-        OUTPUT += bench + " "
-        for mesa in mesas:
-            OUTPUT+=str(database[bench][mesa]['average']) + " "
-        OUTPUT += '\n'
 
-    run_column(OUTPUT)
+def create_row0(retrows):
+    temp_row = Row("Benchmark", "Mesa1", "Mesa2", "diff", "significant")
+    retrows.append(temp_row)
 
-def print_results2(mesa, benchmarks, database):
-    for bench in benchmarks:
-        for key, value in database[bench].items():
-            print(key)
-            print(value['average'])
-            print(value['bench'])
 
+CONFIDENCE_INTERVAL = 0.05  # 5% CI
 if __name__ == "__main__":
-    parse_results()
-    mesas, benchmarks, database = parse_results()
-    #print_results2(mesas, benchmarks, database)
-    print_results(mesas, benchmarks, database)
-#   run_column(do_the_numbers())
+    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest')
+    RETROWS = list()
+    create_row0(RETROWS)
+    MESAS, BENCHMARKS, DATABASE = parse_results(RETROWS)
+    # Only support two columns for doing statistics. We can try to fix this in
+    # the future.
+    assert(len(MESAS) == 2)
+
+    for row in sorted(RETROWS):
+        print(row)
