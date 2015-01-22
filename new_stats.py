@@ -2,15 +2,16 @@
 """This scripts helps generate statistics from a benchmark run. The helper
 functions may be used independently if desired."""
 
-import os
-import subprocess
+import argparse
 import itertools
 import math
 import numpy as np
-from scipy import stats
-from scipy.stats import chi2
+import os
+import subprocess
 from collections import defaultdict
 from collections import namedtuple
+from scipy import stats
+from scipy.stats import chi2
 
 
 def chisquare_critical(confidence, df):
@@ -125,6 +126,26 @@ def run_column(string):
 CONFIDENCE_INTERVAL = 0.05  # 5% CI
 if __name__ == "__main__":
     Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest flawed')
+    parser = argparse.ArgumentParser(description="Process benchmark data. Can "
+                                                 "be run as a mini-ministat "
+                                                 "as well")
+    parser.add_argument('file1', nargs='?', type=argparse.FileType('r'),
+            help='The first file to be compared')
+    parser.add_argument('file2', nargs='?', type=argparse.FileType('r'),
+            help='The second file to be compared')
+    parser.add_argument('-i', '--interactive', help='Bring up interactive mode',
+            action="store_true")
+    args = parser.parse_args()
+
+    if args.file1 and args.file2:
+        mesa1 = parse_single(args.file1.name)
+        mesa2 = parse_single(args.file2.name)
+        print(process_comparison("NAME", mesa1, mesa2))
+        exit(0)
+    elif args.file1:
+        print(stats.describe(np.loadtxt(args.file1, dtype=np.dtype(np.float32))))
+        exit(0)
+
     RETROWS = list()
     create_row0(RETROWS)
     MESAS, BENCHMARKS, DATABASE = parse_results(RETROWS)
