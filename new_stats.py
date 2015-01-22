@@ -32,6 +32,7 @@ def is_equal_variance(mesa1, mesa2):
     x2 = chisquare_critical(.95, len(mesa1))
     return T <= x2
 
+
 """ Returns a tuple of (significance, potentially incorrect data)"""
 def determine_significance(mesa1, mesa2):
     # TODO: if the user wants to verify a test, or set of tests, they may use
@@ -64,12 +65,12 @@ def determine_significance(mesa1, mesa2):
 
     return (p, bad_data)
 
+
 def process_comparison(bench, mesa1, mesa2):
     p_value, flawed = determine_significance(mesa1['values'], mesa2['values'])
     row = Row(bench, mesa1['average'], mesa2['average'],
-            mesa2['average'] - mesa1['average'],
-            p_value < CONFIDENCE_INTERVAL,
-            flawed)
+              mesa2['average'] - mesa1['average'],
+              p_value < CONFIDENCE_INTERVAL, flawed)
     return row
 
 def process(retrows, mesas, benchmarks, database):
@@ -81,20 +82,22 @@ def process(retrows, mesas, benchmarks, database):
             x[i] = cell['values']
             i = i+1
         row = process_comparison(bench,
-                database[bench][mesas[0]],
-                database[bench][mesas[1]])
-        retrows.append(row)
+                                 database[bench][mesas[0]],
+                                 database[bench][mesas[1]])
+        if args.verbose or row.ttest:
+            retrows.append(row)
 
 def parse_single(filename):
     useless, benchmark_name, mesa_version = filename.split('_')
     assert useless == "bench"
     vals = np.loadtxt(filename, dtype=np.dtype(np.float32))
-    return { 'name': mesa_version,
+    return {'name': mesa_version,
             'bench': benchmark_name,
             'filename': filename,
             'values': vals,
             'average': np.average(vals),
             'stats': stats.describe(vals)}
+
 
 def parse_results(retrows):
     database = defaultdict(defaultdict)
@@ -115,27 +118,33 @@ def parse_results(retrows):
 
 
 def create_row0(retrows):
-    temp_row = Row("Benchmark", "Mesa1", "Mesa2", "diff", "significant", "flawed")
+    temp_row = Row("Benchmark", "Mesa1", "Mesa2", "diff",
+                   "significant", "flawed")
     retrows.append(temp_row)
+
 
 def run_column(string):
     p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
     p.communicate(bytes(string, "utf-8"))
 
-
-CONFIDENCE_INTERVAL = 0.05  # 5% CI
 if __name__ == "__main__":
     Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest flawed')
     parser = argparse.ArgumentParser(description="Process benchmark data. Can "
                                                  "be run as a mini-ministat "
                                                  "as well")
     parser.add_argument('file1', nargs='?', type=argparse.FileType('r'),
-            help='The first file to be compared')
+                        help='The first file to be compared')
     parser.add_argument('file2', nargs='?', type=argparse.FileType('r'),
-            help='The second file to be compared')
-    parser.add_argument('-i', '--interactive', help='Bring up interactive mode',
-            action="store_true")
+                        help='The second file to be compared')
+    parser.add_argument('-i', '--interactive', action="store_true",
+                        help='Bring up interactive mode')
+    parser.add_argument('-c', '--confidence', type=float, default=95,
+                        help='Confidence interval used for the Bartlett test')
+    parser.add_argument('-v', '--verbose', action="store_true",
+                        help='Display all results, regardless of significance')
     args = parser.parse_args()
+
+    CONFIDENCE_INTERVAL = 1-args.confidence/100
 
     if args.file1 and args.file2:
         mesa1 = parse_single(args.file1.name)
@@ -143,7 +152,8 @@ if __name__ == "__main__":
         print(process_comparison("NAME", mesa1, mesa2))
         exit(0)
     elif args.file1:
-        print(stats.describe(np.loadtxt(args.file1, dtype=np.dtype(np.float32))))
+        print(stats.describe(np.loadtxt(args.file1,
+                             dtype=np.dtype(np.float32))))
         exit(0)
 
     RETROWS = list()
