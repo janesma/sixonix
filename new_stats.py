@@ -63,33 +63,37 @@ def determine_significance(mesa1, mesa2):
 
     return (p, bad_data)
 
-
+def process_comparison(bench, mesa1, mesa2):
+    p_value, flawed = determine_significance(mesa1['values'], mesa2['values'])
+    row = Row(bench, mesa1['average'], mesa2['average'],
+            mesa2['average'] - mesa1['average'],
+            p_value < CONFIDENCE_INTERVAL,
+            flawed)
+    return row
 
 def process(retrows, mesas, benchmarks, database):
-    # Numpy parses whole numbers as xxx. which doesn't work for scipy
-    with np.errstate(invalid='ignore'):
-        for r in itertools.product(mesas, benchmarks):
-            cell = database[r[1]][r[0]]
-            cell['average'] = np.average(cell['values'])
-            cell['stats'] = stats.describe(cell['values'])
-
     for bench in benchmarks:
         i = 0
         x = {}
         for mesa in mesas:
             cell = database[bench][mesa]
             x[i] = cell['values']
-            # print(stats.describe(x[i]))
             i = i+1
-        p_value, flawed = determine_significance(x[0], x[1])
-        mesa1 = database[bench][mesas[0]]
-        mesa2 = database[bench][mesas[1]]
-        row = Row(bench, mesa1['average'], mesa2['average'],
-                  mesa2['average'] - mesa1['average'],
-                  p_value < CONFIDENCE_INTERVAL,
-                  flawed)
+        row = process_comparison(bench,
+                database[bench][mesas[0]],
+                database[bench][mesas[1]])
         retrows.append(row)
 
+def parse_single(filename):
+    useless, benchmark_name, mesa_version = filename.split('_')
+    assert useless == "bench"
+    vals = np.loadtxt(filename, dtype=np.dtype(np.float32))
+    return { 'name': mesa_version,
+            'bench': benchmark_name,
+            'filename': filename,
+            'values': vals,
+            'average': np.average(vals),
+            'stats': stats.describe(vals)}
 
 def parse_results(retrows):
     database = defaultdict(defaultdict)
@@ -98,15 +102,9 @@ def parse_results(retrows):
     for filename in os.listdir('.'):
         if '_' in filename:
             useless, benchmark_name, mesa_version = filename.split('_')
-            database[benchmark_name][mesa_version] = {
-                'name': mesa_version,
-                'bench': benchmark_name,
-                'filename': filename,
-                'values': np.around(np.loadtxt(filename,
-                                    dtype=np.dtype(np.float32)), 3)}
+            database[benchmark_name][mesa_version] = parse_single(filename)
             mesas.append(mesa_version)
             benchmarks.append(benchmark_name)
-            assert(useless == "bench")
 
     mesas = np.unique(mesas)
     benchmarks = np.unique(benchmarks)
