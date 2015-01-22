@@ -13,6 +13,9 @@ from collections import namedtuple
 from scipy import stats
 from scipy.stats import chi2
 
+BARTLETT_CI = 0.95  # Does this need to be parameterized?
+NORMAL_CI = 1-0.95  # Same
+
 
 def chisquare_critical(confidence, df):
     # There must be a better way to get the critical value of chi-square.
@@ -21,44 +24,47 @@ def chisquare_critical(confidence, df):
     chi_squared = chi2.ppf(conf_int, df-1)
     return chi_squared
 
-""" This uses the bartlett test to determine whether or not the values are of
-equal variance. This test only holds for a normal distribution. The caller
-should have checked this for us.
-TODO: Implement Levene’s test for non-normal data"""
+
 def is_equal_variance(mesa1, mesa2):
+    """ Determine if two sets of values have equal variance.
+
+    This uses the Bartlett test to determine whether or not the values are of
+    equal variance. This test only holds for a normal distribution. The caller
+    should have checked this for us.
+    TODO: Implement Levene’s test for non-normally distributed data
+    """
     # http://www.itl.nist.gov/div898/handbook/eda/section3/eda357.htm
     T, _p = stats.bartlett(mesa1, mesa2)
-    # FIXME: is .95 always safe?
-    x2 = chisquare_critical(.95, len(mesa1))
+    x2 = chisquare_critical(BARTLETT_CI, len(mesa1))
     return T <= x2
 
 
-""" Returns a tuple of (significance, potentially incorrect data)"""
 def determine_significance(mesa1, mesa2):
-    # TODO: if the user wants to verify a test, or set of tests, they may use
-    # the same mesa, for that you would want:
-    # stats.ttest_rel(x, y)
+    """ Determines if two sets of values are statistically significant.
 
-    # equal sample size, and equal variance (Independent t-test). It appears
-    # scipy supports unequal sample sizes implicitly
+    This function will automatically use the independent t-test function if the
+    values are of equal variance. If not, it will use the Welch t-test.
     # http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
-    # unequal sample size or unequal variance (Welch)
     # http://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes.2C_unequal_variances
+    TODO: paired t-test function in for evaluating test variability?
+    # stats.ttest_rel(x, y)
+    """
+
     t, p = stats.ttest_ind(mesa1, mesa2,
                            equal_var=is_equal_variance(mesa1, mesa2))
 
     # All of the above require a normal distribution of the data. If that is
     # false, or we cannot determine (due to limited sample size), make sure the
     # user knows.
-    # FIXME: Is it possible to determine these things with few samples?
+    # FIXME: Is it possible to determine these things with fewer samples?
     bad_data = False
     try:
         k2, normal = stats.mstats.normaltest(mesa1)
         # FIXME: Unhardcode
-        if (normal < 0.05):
+        if (normal < NORMAL_CI):
             bad_data = True
         k2, normal = stats.mstats.normaltest(mesa2)
-        if (normal < 0.05):
+        if (normal < NORMAL_CI):
             bad_data = True
     except ValueError:
         bad_data = True
@@ -73,6 +79,7 @@ def process_comparison(bench, mesa1, mesa2):
               p_value < CONFIDENCE_INTERVAL, flawed)
     return row
 
+
 def process(retrows, mesas, benchmarks, database):
     for bench in benchmarks:
         i = 0
@@ -86,6 +93,7 @@ def process(retrows, mesas, benchmarks, database):
                                  database[bench][mesas[1]])
         if args.verbose or row.ttest:
             retrows.append(row)
+
 
 def parse_single(filename):
     useless, benchmark_name, mesa_version = filename.split('_')
@@ -129,9 +137,12 @@ def run_column(string):
 
 if __name__ == "__main__":
     Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest flawed')
-    parser = argparse.ArgumentParser(description="Process benchmark data. Can "
-                                                 "be run as a mini-ministat "
-                                                 "as well")
+    parser = argparse.ArgumentParser(
+            description="Process benchmark data. By default it will take the \
+                         properly named files from the sixonix runner and \
+                         generate a table with statistical data. \
+                         If files are specified, it will run in a \
+                         ministat-like.")
     parser.add_argument('file1', nargs='?', type=argparse.FileType('r'),
                         help='The first file to be compared')
     parser.add_argument('file2', nargs='?', type=argparse.FileType('r'),
@@ -139,9 +150,11 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--interactive', action="store_true",
                         help='Bring up interactive mode')
     parser.add_argument('-c', '--confidence', type=float, default=95,
-                        help='Confidence interval used for the Bartlett test')
+                        help='Confidence interval used for determining \
+                        significance of the t-test')
     parser.add_argument('-v', '--verbose', action="store_true",
-                        help='Display all results, regardless of significance')
+                        help='Display all results, regardless of significance. \
+                        (Equivalent to "-c 0")')
     args = parser.parse_args()
 
     CONFIDENCE_INTERVAL = 1-args.confidence/100
