@@ -9,7 +9,6 @@ import math
 import numpy as np
 from scipy import stats
 from scipy.stats import chi2
-
 from collections import defaultdict
 from collections import namedtuple
 
@@ -21,7 +20,10 @@ def chisquare_critical(confidence, df):
     chi_squared = chi2.ppf(conf_int, df-1)
     return chi_squared
 
-
+""" This uses the bartlett test to determine whether or not the values are of
+equal variance. This test only holds for a normal distribution. The caller
+should have checked this for us.
+TODO: Implement Levene’s test for non-normal data"""
 def is_equal_variance(mesa1, mesa2):
     # http://www.itl.nist.gov/div898/handbook/eda/section3/eda357.htm
     T, _p = stats.bartlett(mesa1, mesa2)
@@ -29,7 +31,7 @@ def is_equal_variance(mesa1, mesa2):
     x2 = chisquare_critical(.95, len(mesa1))
     return T <= x2
 
-
+""" Returns a tuple of (significance, potentially incorrect data)"""
 def determine_significance(mesa1, mesa2):
     # TODO: if the user wants to verify a test, or set of tests, they may use
     # the same mesa, for that you would want:
@@ -38,17 +40,29 @@ def determine_significance(mesa1, mesa2):
     # equal sample size, and equal variance (Independent t-test). It appears
     # scipy supports unequal sample sizes implicitly
     # http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
-
     # unequal sample size or unequal variance (Welch)
     # http://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes.2C_unequal_variances
     t, p = stats.ttest_ind(mesa1, mesa2,
                            equal_var=is_equal_variance(mesa1, mesa2))
-    return p
 
+    # All of the above require a normal distribution of the data. If that is
+    # false, or we cannot determine (due to limited sample size), make sure the
+    # user knows.
+    # FIXME: Is it possible to determine these things with few samples?
+    bad_data = False
+    try:
+        k2, normal = stats.mstats.normaltest(mesa1)
+        # FIXME: Unhardcode
+        if (normal < 0.05):
+            bad_data = True
+        k2, normal = stats.mstats.normaltest(mesa2)
+        if (normal < 0.05):
+            bad_data = True
+    except ValueError:
+        bad_data = True
 
-def run_column(string):
-    p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
-    p.communicate(bytes(string, "utf-8"))
+    return (p, bad_data)
+
 
 
 def process(retrows, mesas, benchmarks, database):
@@ -67,12 +81,13 @@ def process(retrows, mesas, benchmarks, database):
             x[i] = cell['values']
             # print(stats.describe(x[i]))
             i = i+1
-        p_value = determine_significance(x[0], x[1])
+        p_value, flawed = determine_significance(x[0], x[1])
         mesa1 = database[bench][mesas[0]]
         mesa2 = database[bench][mesas[1]]
         row = Row(bench, mesa1['average'], mesa2['average'],
                   mesa2['average'] - mesa1['average'],
-                  p_value < CONFIDENCE_INTERVAL)
+                  p_value < CONFIDENCE_INTERVAL,
+                  flawed)
         retrows.append(row)
 
 
@@ -101,13 +116,17 @@ def parse_results(retrows):
 
 
 def create_row0(retrows):
-    temp_row = Row("Benchmark", "Mesa1", "Mesa2", "diff", "significant")
+    temp_row = Row("Benchmark", "Mesa1", "Mesa2", "diff", "significant", "flawed")
     retrows.append(temp_row)
+
+def run_column(string):
+    p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
+    p.communicate(bytes(string, "utf-8"))
 
 
 CONFIDENCE_INTERVAL = 0.05  # 5% CI
 if __name__ == "__main__":
-    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest')
+    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest flawed')
     RETROWS = list()
     create_row0(RETROWS)
     MESAS, BENCHMARKS, DATABASE = parse_results(RETROWS)
