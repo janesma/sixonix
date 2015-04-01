@@ -242,7 +242,7 @@ cd $GPUTEST_PATH ; \
 	/test=triangle |
 	grep Score |  awk "{print \$2}"'
 
-TESTS[PIGLIT]='cd $PIGLIT_PATH ; ./piglit-run.py -x glean -x glx quick'
+TESTS[PIGLIT]='cd $PIGLIT_PATH ; ./piglit-run.py -x glean -x glx gpu'
 TESTS[NOP]='echo 10' #Sanity check
 
 # If sourced from another script, just leave
