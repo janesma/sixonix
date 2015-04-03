@@ -9,5 +9,5 @@ source ${GBM_RUNNER}
 
 for mesa in $MESA_LIBS; do
 	output=$(basename $mesa)
-	${GBM_RUNNER} ${mesa}/usr/local/lib PIGLIT ./piglit_${mesa}
+	${GBM_RUNNER} ${mesa}/usr/local/lib PIGLIT ${PWD}/piglit_${output}
 done
