@@ -239,6 +239,13 @@ shift "$((OPTIND-1))" # Shift off the options and optional --.
 # the tests. This means we can skip it in the future.
 source ${GLX_RUNNER}
 
+for mesa in $MESA_LIBS; do
+	if is_debug_build ${mesa}/usr/local/lib ; then
+		echo "Trying to benchmark a debug build ($mesa). Abort!"
+		exit 1
+	fi
+done
+
 # The runner will later set up the real paths, but we want the display setup
 # done now.
 glx_env FAKE_PATH

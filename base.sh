@@ -143,6 +143,12 @@ function gbm_env() {
 	export PIGLIT_PLATFORM=gbm
 }
 
+function is_debug_build() {
+	local mesa_dir=$1
+	readelf -S ${mesa_dir}/dri/i965_dri.so | grep -q debug
+	return $?
+}
+
 synmark_cfg=""
 
 function init_synmark() {
