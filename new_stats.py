@@ -79,6 +79,7 @@ def process_comparison(bench, mesa1, mesa2):
     p_value, flawed = determine_significance(mesa1['values'], mesa2['values'])
     row = Row(bench, mesa1['average'], mesa2['average'],
               mesa2['average'] - mesa1['average'],
+              float("{0:.2f}".format(100 * (mesa2['average'] - mesa1['average']) / mesa1['average'])),
               p_value < CONFIDENCE_INTERVAL, flawed)
     return row
 
@@ -129,7 +130,7 @@ def parse_results(retrows):
 
 
 def create_row0(retrows, mesa1, mesa2):
-    temp_row = Row("Benchmark", mesa1, mesa2, "diff",
+    temp_row = Row("Benchmark", mesa1, mesa2, "diff", '%diff',
                    "significant", "flawed")
     retrows.insert(0, temp_row)
 
@@ -139,7 +140,7 @@ def run_column(string):
     p.communicate(bytes(string, "utf-8"))
 
 if __name__ == "__main__":
-    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff ttest flawed')
+    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff pdiff ttest flawed')
     parser = argparse.ArgumentParser(
             description="Process benchmark data. By default it will take the \
                          properly named files from the sixonix runner and \
