@@ -3,11 +3,14 @@
 functions may be used independently if desired."""
 
 import argparse
+import csv
+import io
 import itertools
 import math
 import numpy as np
 import os
 import subprocess
+#import sys
 from collections import defaultdict
 from collections import namedtuple
 from scipy import stats
@@ -125,10 +128,10 @@ def parse_results(retrows):
     return (mesas, benchmarks, database)
 
 
-def create_row0(retrows):
-    temp_row = Row("Benchmark", "Mesa1", "Mesa2", "diff",
+def create_row0(retrows, mesa1, mesa2):
+    temp_row = Row("Benchmark", mesa1, mesa2, "diff",
                    "significant", "flawed")
-    retrows.append(temp_row)
+    retrows.insert(0, temp_row)
 
 
 def run_column(string):
@@ -149,6 +152,8 @@ if __name__ == "__main__":
                         help='The second file to be compared')
     parser.add_argument('-i', '--interactive', action="store_true",
                         help='Bring up interactive mode')
+    parser.add_argument('-o', '--output', type=argparse.FileType('w'),
+                        help='Direct results to a CSV file')
     parser.add_argument('-c', '--confidence', type=float, default=95,
                         help='Confidence interval used for determining \
                         significance of the t-test')
@@ -170,11 +175,20 @@ if __name__ == "__main__":
         exit(0)
 
     RETROWS = list()
-    create_row0(RETROWS)
     MESAS, BENCHMARKS, DATABASE = parse_results(RETROWS)
+    create_row0(RETROWS, MESAS[0], MESAS[1])
     # Only support two columns for doing statistics. We can try to fix this in
     # the future.
     assert(len(MESAS) == 2)
 
-    for row in sorted(RETROWS):
-        print(row)
+    if args.output:
+            c_writer = csv.writer(args.output, delimiter=',',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            c_writer.writerows(RETROWS)
+    else:
+            output = io.StringIO()
+            c_writer = csv.writer(output, delimiter=' ',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            # Uncomment the below to dump the raw csv
+            #c_writer = csv.writer(sys.stdout, delimiter=' ',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            c_writer.writerows(RETROWS)
+            run_column(output.getvalue())
+            output.close()
