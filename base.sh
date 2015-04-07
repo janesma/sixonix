@@ -109,6 +109,8 @@ function env_sanitize() {
 	unset EGL_PLATFORM
 	unset EGL_DRIVERS_PATH
 	unset DISPLAY
+	unset RES_X
+	unset RES_Y
 }
 
 function get_dimensions() {
@@ -121,6 +123,15 @@ function get_dimensions() {
 	fi
 	export RES_X
 	export RES_Y
+}
+
+function set_dimensions() {
+	local newX=$1
+	local newY=$2
+	output=$(xrandr | grep -E " connected (primary )?[1-9]+" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
+	xrandr --output $output --mode ${newX}x${newY}
+
+	get_dimensions
 }
 
 function glx_env() {
