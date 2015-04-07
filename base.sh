@@ -2,8 +2,10 @@
 
 # Version history
 # 1.0 (1/11/15)
+# 1.1 (4/5/15): Add the debug build checker.
+# 1.2 (4/6/15): Add the mode change checker
 
-VERSION="1.0"
+VERSION="1.2"
 
 DEFAULT_RES_X=1920
 DEFAULT_RES_Y=1080
