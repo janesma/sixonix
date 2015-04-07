@@ -288,14 +288,21 @@ for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 		oldX=$RES_X
 		oldY=$RES_Y
 		fps=$(eval ${TEST_LIST[i]} 2> /dev/null)
-		echo "$test_name $fps $(date +'%T')" >> execution.log
 		last_test=${TEST_LIST[i]##* }
 
 		get_dimensions
+		if check_gpu_hang ; then
+			sed -i '$s/.*/!!!GPU_HANG!!!/' $last_test
+			echo -n "GPU HANG: " >> execution.log
+		fi
+
 		if [ $oldX -ne $RES_X ] || [ $oldY -ne $RES_Y ] ; then
 			sed -i '$s/.*/!!!MODE_CHANGED!!!/' $last_test
 			set_dimensions $RES_X $RES_Y
+			echo -n "MODE CHANGE: " >> execution.log
 		fi
+
+		echo "$test_name $fps $(date +'%T')" >> execution.log
 	fi
 
 	elapsed=$(date -d @$(( $(date -d "now" +%s) - $(date -d "$before" +%s))) -u +'%M:%S')

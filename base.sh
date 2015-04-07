@@ -92,6 +92,10 @@ function jordanatic() {
 	popd
 }
 
+function get_hang_count() {
+	return $(dmesg | grep "GPU HANG" | wc -l)
+}
+
 function init() {
 	[[ -z $DISPLAY ]] && echo "Inappropriate call to init" && exit 1
 	if hash xset 2>/dev/null; then
@@ -100,6 +104,10 @@ function init() {
 	if hash xscreensaver-command 2>/dev/null; then
 		xscreensaver-command -deactivate >/dev/null 2>&1
 	fi
+
+	# Get a count of number of GPU hangs at the start of the run
+	get_hang_count
+	export HANG_COUNT=$?
 }
 
 function env_sanitize() {
@@ -113,6 +121,7 @@ function env_sanitize() {
 	unset DISPLAY
 	unset RES_X
 	unset RES_Y
+	unset HANG_COUNT
 }
 
 function get_dimensions() {
@@ -160,6 +169,17 @@ function is_debug_build() {
 	local mesa_dir=$1
 	readelf -S ${mesa_dir}/dri/i965_dri.so | grep -q debug
 	return $?
+}
+
+function check_gpu_hang() {
+	get_hang_count
+	local count=$?
+	if [[ $count -gt $HANG_COUNT ]] ; then
+		export HANG_COUNT=$count
+		return 0
+	else
+		return 1
+	fi
 }
 
 synmark_cfg=""
