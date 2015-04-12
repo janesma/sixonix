@@ -111,7 +111,7 @@ def parse_single(filename):
             'stats': stats.describe(vals)}
 
 
-def parse_results(retrows):
+def parse_results():
     database = defaultdict(defaultdict)
     mesas = list()
     benchmarks = list()
@@ -124,7 +124,6 @@ def parse_results(retrows):
 
     mesas = np.unique(mesas)
     benchmarks = np.unique(benchmarks)
-    process(retrows, mesas, benchmarks, database)
 
     return (mesas, benchmarks, database)
 
@@ -140,7 +139,6 @@ def run_column(string):
     p.communicate(bytes(string, "utf-8"))
 
 if __name__ == "__main__":
-    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff pdiff ttest flawed')
     parser = argparse.ArgumentParser(
             description="Process benchmark data. By default it will take the \
                          properly named files from the sixonix runner and \
@@ -178,7 +176,9 @@ if __name__ == "__main__":
         exit(0)
 
     RETROWS = list()
-    MESAS, BENCHMARKS, DATABASE = parse_results(RETROWS)
+    MESAS, BENCHMARKS, DATABASE = parse_results()
+    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff pdiff ttest flawed')
+    process(RETROWS, MESAS, BENCHMARKS, DATABASE)
     create_row0(RETROWS, MESAS[0], MESAS[1])
     # Only support two columns for doing statistics. We can try to fix this in
     # the future.
