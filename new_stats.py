@@ -128,15 +128,25 @@ def parse_results():
     return (mesas, benchmarks, database)
 
 
-def create_row0(retrows, mesa1, mesa2):
-    temp_row = Row("Benchmark", mesa1, mesa2, "diff", '%diff',
-                   "significant", "flawed")
-    retrows.insert(0, temp_row)
+def create_row0(retrows, mesas):
+    names = ["Benchmark"] + list(mesas) + ["diff", '%diff', "significant", "flawed"]
+    retrows.insert(0, Row._make(names))
+
+
+def tuple_name(mesas):
+    row_name = "name "
+    i = 0
+    for mesa in MESAS:
+        row_name += "Mesa" + str(i) + " "
+        i += 1
+    row_name += "diff pdiff ttest flawed"
+    return row_name
 
 
 def run_column(string):
     p = subprocess.Popen(['column', '-t'], stdin=subprocess.PIPE)
     p.communicate(bytes(string, "utf-8"))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -177,12 +187,10 @@ if __name__ == "__main__":
 
     RETROWS = list()
     MESAS, BENCHMARKS, DATABASE = parse_results()
-    Row = namedtuple('Row', 'name Mesa1 Mesa2 diff pdiff ttest flawed')
+    Row = namedtuple('Row', tuple_name(MESAS))
+
     process(RETROWS, MESAS, BENCHMARKS, DATABASE)
-    create_row0(RETROWS, MESAS[0], MESAS[1])
-    # Only support two columns for doing statistics. We can try to fix this in
-    # the future.
-    assert(len(MESAS) == 2)
+    create_row0(RETROWS, MESAS)
 
     if args.output:
             c_writer = csv.writer(args.output, delimiter=',',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
