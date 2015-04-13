@@ -95,7 +95,7 @@ def process(retrows, mesas, benchmarks, database):
         row = process_comparison(bench,
                                  database[bench][mesas[0]],
                                  database[bench][mesas[1]])
-        if args.verbose or row.ttest:
+        if args.verbose or row.ttest and not row.flawed:
             retrows.append(row)
 
 
@@ -144,7 +144,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
             description="Process benchmark data. By default it will take the \
                          properly named files from the sixonix runner and \
-                         generate a table with statistical data. \
+                         generate a table with statistical data. The data \
+                         displayed is determined to be both from a normal \
+                         distribution and significantly different. \
                          If files are specified, it will run in a \
                          ministat-like.")
     parser.add_argument('file1', nargs='?', type=argparse.FileType('r'),
