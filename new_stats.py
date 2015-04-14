@@ -13,6 +13,7 @@ import subprocess
 #import sys
 from collections import defaultdict
 from collections import namedtuple
+from enum import Enum
 from scipy import stats
 from scipy.stats import chi2
 
@@ -45,34 +46,37 @@ def is_equal_variance(mesa1, mesa2):
 def determine_significance(mesa1, mesa2):
     """ Determines if two sets of values are statistically significant.
 
-    This function will automatically use the independent t-test function if the
-    values are of equal variance. If not, it will use the Welch t-test.
-    # http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
-    # http://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes.2C_unequal_variances
-    TODO: paired t-test function in for evaluating test variability?
-    # stats.ttest_rel(x, y)
+    In the best case, we can determine a normal distribution, and equal
+    variance. Once determined we can use the independent t-test function if the
+    values are of equal variance.  If we have normal data, but the variance is unequal, the welch t-test is
+    used.
+    http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
+    http://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes.2C_unequal_variances
+
+    In the case where we cannot determine normality the mann-whitney u-test is
+    desired to be used, but this test is only effective when there are greater
+    than 20 samples.
+    http://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test
     """
-
-    t, p = stats.ttest_ind(mesa1, mesa2,
-                           equal_var=is_equal_variance(mesa1, mesa2))
-
-    # All of the above require a normal distribution of the data. If that is
-    # false, or we cannot determine (due to limited sample size), make sure the
-    # user knows.
     # FIXME: Is it possible to determine these things with fewer samples?
-    bad_data = False
+    Distribution = Enum('Distribution', 'Normal, Non_normal Unknown')
+    normality = Distribution.Normal
     try:
         k2, normal = stats.normaltest(mesa1)
         # FIXME: Unhardcode
         if (normal < NORMAL_CI):
-            bad_data = True
+            normality = Distribution.Non_normal
+
         k2, normal = stats.normaltest(mesa2)
         if (normal < NORMAL_CI):
-            bad_data = True
+            normality = Distribution.Non_normal
     except ValueError:
-        bad_data = True
+        normality = Distribution.Unkown
 
-    return (p, bad_data)
+    t, p = stats.ttest_ind(mesa1, mesa2,
+                           equal_var=is_equal_variance(mesa1, mesa2))
+
+    return (p, normality == Distribution.Normal)
 
 
 def process_comparison(bench, mesa1, mesa2):
