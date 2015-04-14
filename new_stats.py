@@ -62,11 +62,11 @@ def determine_significance(mesa1, mesa2):
     # FIXME: Is it possible to determine these things with fewer samples?
     bad_data = False
     try:
-        k2, normal = stats.mstats.normaltest(mesa1)
+        k2, normal = stats.normaltest(mesa1)
         # FIXME: Unhardcode
         if (normal < NORMAL_CI):
             bad_data = True
-        k2, normal = stats.mstats.normaltest(mesa2)
+        k2, normal = stats.normaltest(mesa2)
         if (normal < NORMAL_CI):
             bad_data = True
     except ValueError:
