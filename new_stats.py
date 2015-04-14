@@ -73,18 +73,32 @@ def determine_significance(mesa1, mesa2):
     except ValueError:
         normality = Distribution.Unkown
 
-    t, p = stats.ttest_ind(mesa1, mesa2,
-                           equal_var=is_equal_variance(mesa1, mesa2))
+    equal_variance = is_equal_variance(mesa1, mesa2)
 
-    return (p, normality == Distribution.Normal)
+    if args.ttest:
+        t, p = stats.ttest_ind(mesa1, mesa2, equal_var=equal_variance)
+        return (p, normality == Distribution.Normal, "t-test" if equal_variance else "Welch's")
+    elif args.mannwhitney:
+        u, p = stats.mannwhitneyu(mesa1, mesa2)
+        p *= 2 # We want a 2-tailed p-value
+        return (p, len(mesa1) < 20 or len(mesa2) < 20, "Mann-Whitney")
+
+    if normality == Distribution.Normal:
+        t, p = stats.ttest_ind(mesa1, mesa2, equal_var=equal_variance)
+        return (p, False, "t-test" if equal_variance else "Welch's")
+    else:
+        u, p = stats.mannwhitneyu(mesa1, mesa2)
+        p *= 2 # We want a 2-tailed p-value
+        flawed = len(mesa1) < 20 or len(mesa2) < 20
+        return (p, flawed, "Mann-Whitney")
 
 
 def process_comparison(bench, mesa1, mesa2):
-    p_value, flawed = determine_significance(mesa1['values'], mesa2['values'])
+    p_value, flawed, test_name = determine_significance(mesa1['values'], mesa2['values'])
     row = Row(bench, mesa1['average'], mesa2['average'],
               mesa2['average'] - mesa1['average'],
               float("{0:.2f}".format(100 * (mesa2['average'] - mesa1['average']) / mesa1['average'])),
-              p_value < CONFIDENCE_INTERVAL, flawed)
+              p_value < CONFIDENCE_INTERVAL, flawed, test_name)
     return row
 
 
@@ -133,7 +147,7 @@ def parse_results():
 
 
 def create_row0(retrows, mesas):
-    names = ["Benchmark"] + list(mesas) + ["diff", '%diff', "significant", "flawed"]
+    names = ["Benchmark"] + list(mesas) + ["diff", '%diff', "significant", "flawed", "test"]
     retrows.insert(0, Row._make(names))
 
 
@@ -143,7 +157,7 @@ def tuple_name(mesas):
     for mesa in MESAS:
         row_name += "Mesa" + str(i) + " "
         i += 1
-    row_name += "diff pdiff ttest flawed"
+    row_name += "diff pdiff ttest flawed test"
     return row_name
 
 
@@ -169,6 +183,10 @@ if __name__ == "__main__":
                         help='Bring up interactive mode')
     parser.add_argument('-o', '--output', type=argparse.FileType('w'),
                         help='Direct results to a CSV file')
+    parser.add_argument('-m', '--mannwhitney', action="store_true",
+                        help='Force the use of mann-whiteney u-test')
+    parser.add_argument('-t', '--ttest', action="store_true",
+                        help='Force the use of student t-test')
     parser.add_argument('-c', '--confidence', type=float, default=95,
                         help='Confidence interval used for determining \
                         significance of the t-test')
