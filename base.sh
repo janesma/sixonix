@@ -46,7 +46,7 @@ function heaven() {
 	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
 	./bin/heaven_x64 \
-		-engine_config $heaven_cfg \
+		-engine_config ../$(basename $heaven_cfg) \
 		-system_script heaven/unigine.cpp
 	set +o nounset
 	rm $heaven_cfg
