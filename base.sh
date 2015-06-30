@@ -207,7 +207,7 @@ function init_synmark() {
 	echo $synmark_cfg #return to caller
 }
 
-SCRIPT_PATH=$(pwd $(dirname $BASH_SOURCE))
+SCRIPT_PATH=$(realpath $(dirname $BASH_SOURCE))
 declare -A TESTS
 TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
