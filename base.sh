@@ -7,20 +7,6 @@
 
 VERSION="1.2"
 
-DEFAULT_RES_X=1920
-DEFAULT_RES_Y=1080
-
-# Customize this to your own environments
-GLB27_BASE=$HOME/benchmarks/GLB27/
-GLB30_BASE=$HOME/benchmarks/GLB30/
-PIGLIT_PATH=$HOME/intel-gfx/piglit
-VALLEY_PATH=$HOME/benchmarks/Valley-1.1-rc1/bin
-SYNMARK_PATH=$HOME/benchmarks/Synmark2-6.00/
-HEAVEN_PATH=$HOME/benchmarks/Heaven-4.1-rc1/
-GPUTEST_PATH=$HOME/benchmarks/GpuTest_Linux_x64_0.7.0
-XONOTIC_PATH=$HOME/benchmarks/Xonotic
-WARSOW_PATH=$HOME/benchmarks/warsow_15
-
 # Example ways to use this script:
 # Run GBM piglit with custom mesa:
 #	gbm.sh /foo/bar/mesa/lib PIGLIT [extra piglit args] results/dir
@@ -33,9 +19,26 @@ WARSOW_PATH=$HOME/benchmarks/warsow_15
 # Run GLX with menu and system mesa:
 #	base.sh
 
+# By default the script will try to use the native resolution. However in
+# failure cases, it will warn and fall back to this resolution.
+DEFAULT_RES_X=1920
+DEFAULT_RES_Y=1080
+
+# Customize this to your own environments.
+BENCHDIR=$HOME/benchmarks/
+GLB27_BASE=$BENCHDIR/GLB27/
 GL27_DATA_PATH=$GLB27_BASE/data
 GL27_PATH=$GLB27_BASE/buildES/binaries/GLBenchmark
+GLB30_BASE=$BENCHDIR/GLB30/
 GLB30_PATH=$GLB30_BASE/gfxbench-source-corporate/out/build/linux/gfxbench_Release/mainapp
+VALLEY_PATH=$BENCHDIR/Valley-1.1-rc1/bin
+SYNMARK_PATH=$BENCHDIR/Synmark2-6.00/
+HEAVEN_PATH=$BENCHDIR/Heaven-4.1-rc1/
+GPUTEST_PATH=$BENCHDIR/GpuTest_Linux_x64_0.7.0
+XONOTIC_PATH=$BENCHDIR/Xonotic
+WARSOW_PATH=$BENCHDIR/warsow_15
+
+PIGLIT_PATH=$HOME/intel-gfx/piglit
 
 function heaven() {
 	set -o nounset
@@ -129,6 +132,7 @@ function get_dimensions() {
 		read RES_X RES_Y <<< $(xdpyinfo | grep dimensions | \
 			awk '{print $2}' | awk -Fx '{print $1, $2}')
 	else
+		echo "WARNING: COULDN'T GET DIMENSIONS"
 		RES_X=$DEFAULT_RES_X
 		RES_Y=$DEFAULT_RES_Y
 	fi
@@ -139,7 +143,8 @@ function get_dimensions() {
 function set_dimensions() {
 	local newX=$1
 	local newY=$2
-	output=$(xrandr | grep -E " connected (primary )?[1-9]+" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
+	output=$(xrandr | grep -E " connected (primary )?[1-9]+" | \
+		sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
 	xrandr --output $output --mode ${newX}x${newY}
 
 	get_dimensions
@@ -202,12 +207,12 @@ function init_synmark() {
 
 SCRIPT_PATH=$(dirname $BASH_SOURCE)
 declare -A TESTS
-TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null |  egrep -e "[0-9]+ frames" | awk "{print \$6}"'
-TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal" 2>/dev/null |  egrep -e "[0-9]+ frames" | awk "{print \$6}"'
+TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
+TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 
 TESTS[WARSOW]='
 $WARSOW_PATH/warsow -nosound +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 0 \
-	+set timedemo 1 +exec sixonix.cfg +demo benchsow.wdz20  \
+	+set timedemo 1 +exec sixonix.cfg +demo benchsow.wdz20 \
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
 TESTS[TREX]='
@@ -237,21 +242,21 @@ $GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
 TESTS[MANHATTAN]='
 cd $GLB30_PATH ; \
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
-	MESA_GLSL_VERSION_OVERRIDE=400  \
-	MESA_GL_VERSION_OVERRIDE=4.1  \
+	MESA_GLSL_VERSION_OVERRIDE=400 \
+	MESA_GL_VERSION_OVERRIDE=4.1 \
 	./mainapp -t gl_manhattan -w $RES_X -h $RES_Y | \
 	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
 TESTS[MANHATTAN_O]='
 cd $GLB30_PATH ; \
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
-	MESA_GLSL_VERSION_OVERRIDE=400  \
-	MESA_GL_VERSION_OVERRIDE=4.1  \
+	MESA_GLSL_VERSION_OVERRIDE=400 \
+	MESA_GL_VERSION_OVERRIDE=4.1 \
 	./mainapp -t gl_manhattan_off -w $RES_X -h $RES_Y | \
 	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
 TESTS[VALLEY]='cd $VALLEY_PATH ; valley | grep -i fps | awk "{print \$2}"'
-TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps  | awk "{print \$2}"'
+TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps | awk "{print \$2}"'
 
 #Be careful. I sed this, so newlines don't work easily
 TESTS[SYNMARK]='
@@ -263,7 +268,7 @@ cd $GPUTEST_PATH ; \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=fur | \
-	grep Score |  awk "{print \$2}"'
+	grep Score | awk "{print \$2}"'
 
 TESTS[PLOT3D]='
 cd $GPUTEST_PATH ; \
@@ -271,7 +276,7 @@ cd $GPUTEST_PATH ; \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=plot3d | \
-	grep Score |  awk "{print \$2}"'
+	grep Score | awk "{print \$2}"'
 
 TESTS[TRIANGLE]='
 cd $GPUTEST_PATH ; \
@@ -279,7 +284,7 @@ cd $GPUTEST_PATH ; \
 	/benchmark /benchmark_duration_ms=10000 \
 	/print_score /no_scorebox \
 	/test=triangle |
-	grep Score |  awk "{print \$2}"'
+	grep Score | awk "{print \$2}"'
 
 TESTS[PIGLIT]='cd $PIGLIT_PATH ; ./piglit-run.py -x glean -x glx gpu'
 TESTS[NOP]='echo 10' #Sanity check
@@ -305,7 +310,7 @@ fi
 
 [[ -n $SKIP_RUNNER_INIT ]] && init
 
-if [[ $# -eq 0 ]];  then
+if [[ $# -eq 0 ]]; then
 	prompt="Pick an option:"
 
 	PS3="Select test (just hit ctrl+c to exit)"
