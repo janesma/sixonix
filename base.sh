@@ -41,13 +41,15 @@ WARSOW_PATH=$BENCHDIR/warsow_15
 PIGLIT_PATH=$HOME/intel-gfx/piglit
 
 function heaven() {
+	heaven_cfg=$(mktemp -p $HEAVEN_PATH --suffix=.cfg)
+	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/heaven_4.0.cfg > $heaven_cfg
 	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
-	./bin/heaven_x64 -video_app opengl -data_path ../ -sound_app null \
-		-engine_config ../data/heaven_4.0.cfg -video_multisample 0 \
-		-system_script heaven/unigine.cpp -video_mode -1 -video_fullscreen 1 \
-		-extern_define PHORONIX,RELEASE
+	./bin/heaven_x64 \
+		-engine_config $heaven_cfg \
+		-system_script heaven/unigine.cpp
 	set +o nounset
+	rm $heaven_cfg
 }
 
 function valley() {
@@ -205,7 +207,7 @@ function init_synmark() {
 	echo $synmark_cfg #return to caller
 }
 
-SCRIPT_PATH=$(dirname $BASH_SOURCE)
+SCRIPT_PATH=$(pwd $(dirname $BASH_SOURCE))
 declare -A TESTS
 TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
