@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Version history
-# 1.0 (1/11/15)
-# 1.1 (4/5/15): Add the debug build checker.
-# 1.2 (4/6/15): Add the mode change checker and hang checker
-
-VERSION="1.2"
-
 # Example ways to use this script:
 # Run GBM piglit with custom mesa:
 #	gbm.sh /foo/bar/mesa/lib PIGLIT [extra piglit args] results/dir
@@ -291,11 +284,6 @@ TESTS[NOP]='echo 10' #Sanity check
 
 # If sourced from another script, just leave
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return
-
-if [[ $# && "$1" = "-v" ]] ; then
-	echo version: $VERSION
-	exit 0
-fi
 
 # IF our script name was gbm.sh, setup the GBM environment. If it was named
 # glx, then do the usual thing. Default to local mesa install
