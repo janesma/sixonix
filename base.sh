@@ -45,9 +45,7 @@ function heaven() {
 	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/heaven_4.0.cfg > $heaven_cfg
 	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
-	./bin/heaven_x64 \
-		-engine_config ../$(basename $heaven_cfg) \
-		-system_script heaven/unigine.cpp
+	./bin/heaven_x64 -engine_config ../$(basename $heaven_cfg)
 	set +o nounset
 	rm $heaven_cfg
 }
