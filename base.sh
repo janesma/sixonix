@@ -31,7 +31,7 @@ GL27_DATA_PATH=$GLB27_BASE/data
 GL27_PATH=$GLB27_BASE/buildES/binaries/GLBenchmark
 GLB30_BASE=$BENCHDIR/GLB30/
 GLB30_PATH=$GLB30_BASE/gfxbench-source-corporate/out/build/linux/gfxbench_Release/mainapp
-VALLEY_PATH=$BENCHDIR/Valley-1.1-rc1/bin
+VALLEY_PATH=$BENCHDIR/Valley-1.1-rc1/
 SYNMARK_PATH=$BENCHDIR/Synmark2-6.00/
 HEAVEN_PATH=$BENCHDIR/Heaven-4.1-rc1/
 GPUTEST_PATH=$BENCHDIR/GpuTest_Linux_x64_0.7.0
@@ -51,11 +51,11 @@ function heaven() {
 }
 
 function valley() {
+	valley_cfg=$(mktemp -p $VALLEY_PATH --suffix=.cfg)
+	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/valley_1.1.cfg > $valley_cfg
 	set -o nounset
-	./valley_x64 -project_name Valley -data_path ../ -engine_config \
-		../data/valley_1.1.cfg -system_script valley/unigine.cpp \
-		-sound_app null -video_app opengl -video_multisample 0 \
-		-video_mode -1 -video_fullscreen 1 -extern_define PHORONIX,RELEASE
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
+	./bin/valley_x64 -engine_config ../$(basename $valley_cfg)
 	set +o nounset
 }
 
