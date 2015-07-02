@@ -19,7 +19,7 @@ DEFAULT_RES_Y=1080
 
 # Customize this to your own environments.
 BENCHDIR=$HOME/benchmarks/
-GLB27_BASE=$BENCHDIR/GLB27/
+GLB27_BASE=$BENCHDIR/_deprecated_/GLB27/
 GL27_DATA_PATH=$GLB27_BASE/data
 GL27_PATH=$GLB27_BASE/buildES/binaries/GLBenchmark
 GLB30_BASE=$BENCHDIR/GLB30/
@@ -201,28 +201,16 @@ $WARSOW_PATH/warsow -nosound +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
 TESTS[TREX]='
-$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
-	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
-	-t GLB27_TRex_C24Z16_FixedTimeStep | \
-	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+cd $GLB30_PATH ; \
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
+	./mainapp -t gl_trex -w $RES_X -h $RES_Y | \
+	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
 TESTS[TREX_O]='
-$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
-	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
-	-t GLB27_TRex_C24Z16_FixedTimeStep_Offscreen | \
-	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
-
-TESTS[EGYPT]='
-$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
-	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
-	-t GLB27_EgyptHD_inherited_C24Z16_FixedTime | \
-	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
-
-TESTS[EGYPT_O]='
-$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
-	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
-	-t GLB27_EgyptHD_inherited_C24Z16_FixedTime_Offscreen | \
-	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+cd $GLB30_PATH ; \
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
+	./mainapp -t gl_trex_off -w $RES_X -h $RES_Y | \
+	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
 TESTS[MANHATTAN]='
 cd $GLB30_PATH ; \
@@ -273,6 +261,31 @@ cd $GPUTEST_PATH ; \
 
 TESTS[PIGLIT]='cd $PIGLIT_PATH ; ./piglit-run.py -x glean -x glx gpu'
 TESTS[NOP]='echo 10' #Sanity check
+
+# Deprecated tests
+TESTS[TREX_2.7]='
+$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
+	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
+	-t GLB27_TRex_C24Z16_FixedTimeStep | \
+	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+
+TESTS[TREX_O_2.7]='
+$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
+	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
+	-t GLB27_TRex_C24Z16_FixedTimeStep_Offscreen | \
+	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+
+TESTS[EGYPT]='
+$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
+	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
+	-t GLB27_EgyptHD_inherited_C24Z16_FixedTime | \
+	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+
+TESTS[EGYPT_O]='
+$GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
+	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
+	-t GLB27_EgyptHD_inherited_C24Z16_FixedTime_Offscreen | \
+	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
 
 # If sourced from another script, just leave
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return
