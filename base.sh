@@ -33,22 +33,14 @@ WARSOW_PATH=$BENCHDIR/warsow_15
 
 PIGLIT_PATH=$HOME/intel-gfx/piglit
 
-function heaven() {
-	heaven_cfg=$(mktemp -p $HEAVEN_PATH --suffix=.cfg)
-	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/heaven_4.0.cfg > $heaven_cfg
+function unigine() {
+	local path=$1
+	local bench=$2
+	cfg=$(mktemp -p $path --suffix=.cfg)
+	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/${bench}.cfg > $cfg
 	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
-	./bin/heaven_x64 -engine_config ../$(basename $heaven_cfg)
-	set +o nounset
-	rm $heaven_cfg
-}
-
-function valley() {
-	valley_cfg=$(mktemp -p $VALLEY_PATH --suffix=.cfg)
-	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/valley_1.1.cfg > $valley_cfg
-	set -o nounset
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
-	./bin/valley_x64 -engine_config ../$(basename $valley_cfg)
+	./bin/${bench}_x64 -engine_config ../$(basename $cfg)
 	set +o nounset
 }
 
@@ -248,8 +240,8 @@ cd $GLB30_PATH ; \
 	./mainapp -t gl_manhattan_off -w $RES_X -h $RES_Y | \
 	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
 
-TESTS[VALLEY]='cd $VALLEY_PATH ; valley | grep -i fps | awk "{print \$2}"'
-TESTS[HEAVEN]='cd $HEAVEN_PATH ; heaven | grep -i fps | awk "{print \$2}"'
+TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley | grep -i fps | awk "{print \$2}"'
+TESTS[HEAVEN]='cd $HEAVEN_PATH ; unigine $HEAVEN_PATH heaven | grep -i fps | awk "{print \$2}"'
 
 #Be careful. I sed this, so newlines don't work easily
 TESTS[SYNMARK]='
