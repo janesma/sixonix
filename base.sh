@@ -80,6 +80,12 @@ function jordanatic() {
 	popd
 }
 
+function gfxbench30() {
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+	./mainapp -t ${1} -w $RES_X -h $RES_Y | \
+		grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"
+}
+
 function get_hang_count() {
 	return $(dmesg | grep "GPU HANG" | wc -l)
 }
@@ -200,33 +206,16 @@ $WARSOW_PATH/warsow -nosound +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 
 	+set timedemo 1 +exec sixonix.cfg +demo benchsow.wdz20 \
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
-TESTS[TREX]='
-cd $GLB30_PATH ; \
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
-	./mainapp -t gl_trex -w $RES_X -h $RES_Y | \
-	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
-
-TESTS[TREX_O]='
-cd $GLB30_PATH ; \
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
-	./mainapp -t gl_trex_off -w $RES_X -h $RES_Y | \
-	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
-
-TESTS[MANHATTAN]='
-cd $GLB30_PATH ; \
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
+TESTS[TREX]='cd $GLB30_PATH; gfxbench30 gl_trex'
+TESTS[TREX_O]='cd $GLB30_PATH; gfxbench30 gl_trex_off'
+TESTS[MANHATTAN]='cd $GLB30_PATH ;
 	MESA_GLSL_VERSION_OVERRIDE=400 \
 	MESA_GL_VERSION_OVERRIDE=4.1 \
-	./mainapp -t gl_manhattan -w $RES_X -h $RES_Y | \
-	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
-
-TESTS[MANHATTAN_O]='
-cd $GLB30_PATH ; \
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. ; \
+	gfxbench30 gl_manhattan'
+TESTS[MANHATTAN_O]='cd $GLB30_PATH ;
 	MESA_GLSL_VERSION_OVERRIDE=400 \
 	MESA_GL_VERSION_OVERRIDE=4.1 \
-	./mainapp -t gl_manhattan_off -w $RES_X -h $RES_Y | \
-	grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"'
+	gfxbench30 gl_manhattan_off'
 
 TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley | grep -i fps | awk "{print \$2}"'
 TESTS[HEAVEN]='cd $HEAVEN_PATH ; unigine $HEAVEN_PATH heaven | grep -i fps | awk "{print \$2}"'
