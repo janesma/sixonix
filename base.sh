@@ -86,6 +86,14 @@ function gfxbench30() {
 		grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"
 }
 
+function gputest() {
+	./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
+		/benchmark /benchmark_duration_ms=10000 \
+		/print_score /no_scorebox \
+		/test=${1} | \
+		grep Score | awk "{print \$2}"
+}
+
 function get_hang_count() {
 	return $(dmesg | grep "GPU HANG" | wc -l)
 }
@@ -224,29 +232,9 @@ TESTS[HEAVEN]='cd $HEAVEN_PATH ; unigine $HEAVEN_PATH heaven | grep -i fps | awk
 TESTS[SYNMARK]='
 cd $SYNMARK_PATH ; ./synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
 
-TESTS[FUR]='
-cd $GPUTEST_PATH ; \
-./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
-	/benchmark /benchmark_duration_ms=10000 \
-	/print_score /no_scorebox \
-	/test=fur | \
-	grep Score | awk "{print \$2}"'
-
-TESTS[PLOT3D]='
-cd $GPUTEST_PATH ; \
-./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
-	/benchmark /benchmark_duration_ms=10000 \
-	/print_score /no_scorebox \
-	/test=plot3d | \
-	grep Score | awk "{print \$2}"'
-
-TESTS[TRIANGLE]='
-cd $GPUTEST_PATH ; \
-./GpuTest /fullscreen /width=$RES_X /height=$RES_Y \
-	/benchmark /benchmark_duration_ms=10000 \
-	/print_score /no_scorebox \
-	/test=triangle |
-	grep Score | awk "{print \$2}"'
+TESTS[FUR]='cd $GPUTEST_PATH; gputest fur'
+TESTS[TRIANGLE]=' cd $GPUTEST_PATH; gputest triangle'
+TESTS[PLOT3D]='cd $GPUTEST_PATH; gputest plot3d'
 
 TESTS[PIGLIT]='cd $PIGLIT_PATH ; ./piglit-run.py -x glean -x glx gpu'
 TESTS[NOP]='echo 10' #Sanity check
