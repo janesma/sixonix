@@ -206,6 +206,8 @@ function init_synmark() {
 
 SCRIPT_PATH=$(realpath $(dirname $BASH_SOURCE))
 declare -A TESTS
+
+# Open source games
 TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal" 2>/dev/null | egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 
@@ -214,6 +216,7 @@ $WARSOW_PATH/warsow -nosound +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 
 	+set timedemo 1 +exec sixonix.cfg +demo benchsow.wdz20 \
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
+# GLBench/GFXBench tests
 TESTS[TREX]='cd $GLB30_PATH; gfxbench30 gl_trex'
 TESTS[TREX_O]='cd $GLB30_PATH; gfxbench30 gl_trex_off'
 TESTS[MANHATTAN]='cd $GLB30_PATH ;
@@ -225,17 +228,20 @@ TESTS[MANHATTAN_O]='cd $GLB30_PATH ;
 	MESA_GL_VERSION_OVERRIDE=4.1 \
 	gfxbench30 gl_manhattan_off'
 
+# Unigine tests
 TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley | grep -i fps | awk "{print \$2}"'
 TESTS[HEAVEN]='cd $HEAVEN_PATH ; unigine $HEAVEN_PATH heaven | grep -i fps | awk "{print \$2}"'
 
-#Be careful. I sed this, so newlines don't work easily
+# Synmark
 TESTS[SYNMARK]='
 cd $SYNMARK_PATH ; ./synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
 
+# GPUtest
 TESTS[FUR]='cd $GPUTEST_PATH; gputest fur'
 TESTS[TRIANGLE]=' cd $GPUTEST_PATH; gputest triangle'
 TESTS[PLOT3D]='cd $GPUTEST_PATH; gputest plot3d'
 
+# Misc
 TESTS[PIGLIT]='cd $PIGLIT_PATH ; ./piglit-run.py -x glean -x glx gpu'
 TESTS[NOP]='echo 10' #Sanity check
 
