@@ -217,6 +217,10 @@ $WARSOW_PATH/warsow -nosound +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
 # GLBench/GFXBench tests
+TESTS[BLEND]='cd $GLB30_PATH; gfxbench30 gl_blending'
+TESTS[BLEND_O]='cd $GLB30_PATH; gfxbench30 gl_blending_off'
+TESTS[FILL]='cd $GLB30_PATH; gfxbench30 gl_fill'
+TESTS[FILL_O]='cd $GLB30_PATH; gfxbench30 gl_fill_off'
 TESTS[TREX]='cd $GLB30_PATH; gfxbench30 gl_trex'
 TESTS[TREX_O]='cd $GLB30_PATH; gfxbench30 gl_trex_off'
 TESTS[MANHATTAN]='cd $GLB30_PATH ;
