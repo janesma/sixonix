@@ -37,7 +37,7 @@ function unigine() {
 	local path=$1
 	local bench=$2
 	cfg=$(mktemp -p $path --suffix=.cfg)
-	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${SCRIPT_PATH}/configs/${bench}.cfg > $cfg
+	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${CONFIGS_PATH}/${bench}.cfg > $cfg
 	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
 	./bin/${bench}_x64 -engine_config ../$(basename $cfg)
@@ -205,6 +205,7 @@ function init_synmark() {
 }
 
 SCRIPT_PATH=$(realpath $(dirname $BASH_SOURCE))
+CONFIGS_PATH=${SCRIPT_PATH}/configs/
 declare -A TESTS
 
 # Open source games
