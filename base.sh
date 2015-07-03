@@ -82,7 +82,7 @@ function jordanatic() {
 
 function gfxbench30() {
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
-	./mainapp -t ${1} -w $RES_X -h $RES_Y | \
+	./mainapp -w $RES_X -h $RES_Y -t ${1} -fullscreen 1 | \
 		grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"
 }
 
