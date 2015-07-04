@@ -24,6 +24,8 @@ GL27_DATA_PATH=$GLB27_BASE/data
 GL27_PATH=$GLB27_BASE/buildES/binaries/GLBenchmark
 GLB30_BASE=$BENCHDIR/GLB30/
 GLB30_PATH=$GLB30_BASE/gfxbench-source-corporate/out/build/linux/gfxbench_Release/mainapp
+GLB31_BASE=$BENCHDIR/gfxbench_gl-src-3.1.1+corporate/
+GLB31_PATH=$GLB31_BASE/out/build/linux/testfw_Release/tfw-dev/
 VALLEY_PATH=$BENCHDIR/Valley-1.1-rc1/
 SYNMARK_PATH=$BENCHDIR/Synmark2-6.00/
 HEAVEN_PATH=$BENCHDIR/Heaven-4.1-rc1/
@@ -80,12 +82,13 @@ function jordanatic() {
 	popd
 }
 
-function gfxbench30() {
-	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
-	./mainapp -w $RES_X -h $RES_Y \
-		-offscreen_width $RES_X -offscreen_height $RES_Y \
-		-t ${1} -fullscreen 1 | \
-		grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"
+function gfxbench31() {
+	${2}/testfw_app -w $RES_X -h $RES_Y \
+		--ei -offscreen_width=$RES_X --ei -offscreen_height=$RES_Y \
+		-b ${2} -t ${1} --ei -fullscreen=1 \
+		--ei -play_time=30000 \
+		--gfx glfw --ei -fps_log_window=1 | \
+		grep fps | awk -F"[ ,]" "{printf \"%.3f\\n\", \$6}"
 }
 
 function gputest() {
@@ -221,20 +224,12 @@ $WARSOW_PATH/warsow.x86_64 +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 0 
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
 
 # GLBench/GFXBench tests
-TESTS[BLEND]='cd $GLB30_PATH; gfxbench30 gl_blending'
-TESTS[BLEND_O]='cd $GLB30_PATH; gfxbench30 gl_blending_off'
-TESTS[FILL]='cd $GLB30_PATH; gfxbench30 gl_fill'
-TESTS[FILL_O]='cd $GLB30_PATH; gfxbench30 gl_fill_off'
-TESTS[TREX]='cd $GLB30_PATH; gfxbench30 gl_trex'
+TESTS[FILL]='MESA_GLSL_VERSION_OVERRIDE=400 MESA_GL_VERSION_OVERRIDE=4.1 gfxbench31 gl_fill2 $GLB31_PATH'
+TESTS[FILL_O]='MESA_GLSL_VERSION_OVERRIDE=400 MESA_GL_VERSION_OVERRIDE=4.1 gfxbench31 gl_fill2_off $GLB31_PATH'
+TESTS[TREX]='gfxbench31 gl_trex $GLB31_PATH'
 TESTS[TREX_O]='cd $GLB30_PATH; gfxbench30 gl_trex_off'
-TESTS[MANHATTAN]='cd $GLB30_PATH ;
-	MESA_GLSL_VERSION_OVERRIDE=400 \
-	MESA_GL_VERSION_OVERRIDE=4.1 \
-	gfxbench30 gl_manhattan'
-TESTS[MANHATTAN_O]='cd $GLB30_PATH ;
-	MESA_GLSL_VERSION_OVERRIDE=400 \
-	MESA_GL_VERSION_OVERRIDE=4.1 \
-	gfxbench30 gl_manhattan_off'
+TESTS[MANHATTAH]='MESA_GLSL_VERSION_OVERRIDE=400 MESA_GL_VERSION_OVERRIDE=4.1 gfxbench31 gl_manhattan $GLB31_PATH'
+TESTS[MANHATTAH_O]='MESA_GLSL_VERSION_OVERRIDE=400 MESA_GL_VERSION_OVERRIDE=4.1 gfxbench31 gl_manhattan_off $GLB31_PATH'
 
 # Unigine tests
 TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley | grep -i fps | awk "{print \$2}"'
@@ -277,6 +272,14 @@ $GL27_PATH -data $GL27_DATA_PATH -skip_load_frames \
 	-w $RES_X -h $RES_Y -ow $RES_X -oh $RES_Y \
 	-t GLB27_EgyptHD_inherited_C24Z16_FixedTime_Offscreen | \
 	grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"'
+
+function gfxbench30() {
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+	./mainapp -w $RES_X -h $RES_Y \
+		-offscreen_width $RES_X -offscreen_height $RES_Y \
+		-t ${1} -fullscreen 1 | \
+		grep score | awk -F"[ ,]" "{printf \"%.3f\\n\", \$5}"
+}
 
 # If sourced from another script, just leave
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return
