@@ -61,29 +61,29 @@ something with an underscore " _ " in it.
 
 1. Configure the mesa build with default prefix and no debug symbols.
 (ie, no -g, and don't touch --prefix or --exec_prefix)
-- ./autogen.sh CFLAGS='-O2 -fomit-frame-pointer -march=native' ...
+  - `./autogen.sh CFLAGS='-O2 -fomit-frame-pointer -march=native' ...`
 2. Build mesa
-- make
+  - `make`
 
 3. Install it to the local test directory
-- make DESTDIR=~/mesa-test-dir/mesa-slow install
+  - `make DESTDIR=~/mesa-test-dir/mesa-slow install`
 
 4. apply really cool patch that improves perf
-- git apply foo.patch
+  - `git apply foo.patch`
 
 5. Build and install the faster mesa
-- make && make DESTDIR=~/mesa-test-dir/mesa-fast install
+  - `make && make DESTDIR=~/mesa-test-dir/mesa-fast install`
 
 6. Move to a directory you don't mind cluttering
-- mkdir -p ~/results/perf ; cd $!
+  - `mkdir -p ~/results/perf ; cd $!`
 
 7. Start benchmarking!
-- A quick sanity test:
-  -  ~/scripts/sixonix/run_shuffled_benchmarks.sh -Q
-- Every test 18 times (this should be the gold standard):
-  -  ~/scripts/sixonix/run_shuffled_benchmarks.sh -A -i 18
-- Unigine benchmarks, 5 times:
-  -  ~/scripts/sixonix/run_shuffled_benchmarks.sh -u -i 5
+  - A quick sanity test:
+      -  `~/scripts/sixonix/run_shuffled_benchmarks.sh -Q`
+  - Every test 18 times (this should be the gold standard):
+      -  `~/scripts/sixonix/run_shuffled_benchmarks.sh -A -i 18`
+  - Unigine benchmarks, 5 times:
+      -  `~/scripts/sixonix/run_shuffled_benchmarks.sh -u -i 5`
 
 an execution.log file is created so one can quickly see the order in which
 things ran.
@@ -102,10 +102,10 @@ you've got enough samples, you should definitely use this, otherwise, either
 munge the script, or use do_stats.
 
 - Default statistical comparison (all results) of two GL drivers:
-  -  ~/scripts/sixonix/new_stat.py -v
+  -  `~/scripts/sixonix/new_stat.py -v`
 
 - Compare two tests:
-  -  ~/scricts/sixonix/new_stats.py bench_warsow_mesa-slow bench_warsow_mesa-fast
+  -  `~/scricts/sixonix/new_stats.py bench_warsow_mesa-slow bench_warsow_mesa-fast`
 
 #### do_stats
 The original do_stats script defers to ministat for all the statistical
@@ -113,4 +113,4 @@ generation. What's nice about this script is it doesn't care about sample
 numbers or distributions, or anything like that. The bash quickly grew
 unmaintainable, and so it's abandoned. (ie. use at your own risk).
 
-~/sripts/sixonix/do_stats.sh
+`~/sripts/sixonix/do_stats.sh`
