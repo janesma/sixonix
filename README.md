@@ -22,16 +22,16 @@ I will not mention bash explicitly. If you don't have bash on your system, I do
 not want you to use this tool.
 
 run_shuffled_benchmarks.sh:
-none?
+- none?
 
 do_stats.sh:
-ministat
+- ministat
 
 new_stats.py:
-python3
-numpy
-scipy
-ghc - lol, just kidding
+- python3
+- numpy
+- scipy
+- ghc - lol, just kidding
 
 
 Installation
