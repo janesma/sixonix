@@ -32,9 +32,21 @@ HEAVEN_PATH=$BENCHDIR/Heaven-4.1-rc1/
 GPUTEST_PATH=$BENCHDIR/GpuTest_Linux_x64_0.7.0
 XONOTIC_PATH=$BENCHDIR/Xonotic
 WARSOW_PATH=$BENCHDIR/warsow_15
+GLEST_BASE=$BENCHDIR/megaglest-source/
+GLEST_PATH=$GLEST_BASE/mk/linux/build/source/glest_game
 
 PIGLIT_PATH=$HOME/intel-gfx/piglit
 
+function megaglest() {
+	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${CONFIGS_PATH}/glest.ini > $GLEST_PATH/glest.ini;
+	cd $GLEST_BASE
+	timeout 70s \
+		./mk/linux/build/source/glest_game/megaglest \
+		--data-path=data/glest_game/ \
+		--disable-sound \
+		--load-scenario=gfx-benchmark | \
+		grep RenderFps | awk '{print $6}' | cut -c -2
+}
 function unigine() {
 	local path=$1
 	local bench=$2
@@ -235,6 +247,8 @@ sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${CONFIGS_PATH}/warsow.cfg > $WARSOW_
 $WARSOW_PATH/warsow.x86_64 +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 0 \
 	+set timedemo 1 +demo benchsow.wdz20 \
 	+next "quit" 2> /dev/null 2>&1 | grep frames | awk "{print \$5}"'
+
+TESTS[MEGAGLEST]='megaglest'
 
 # GLBench/GFXBench tests
 TESTS[FILL]='MESA_GLSL_VERSION_OVERRIDE=400 MESA_GL_VERSION_OVERRIDE=4.1 gfxbench31 gl_fill2 $GLB31_PATH'
