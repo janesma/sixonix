@@ -40,6 +40,22 @@ function shuffle() {
 	done
 }
 
+#Copied from http://wiki.bash-hackers.org/commands/builtin/read
+function asksure() {
+        echo -n "$1 (Y/N)?"
+        while read -r -n 1 -s answer; do
+                if [[ $answer = [YyNn] ]]; then
+                        [[ $answer = [Yy] ]] && retval=0
+                        [[ $answer = [Nn] ]] && retval=1
+                        break
+                fi
+        done
+
+        echo # just a final linefeed, optics...
+
+        return $retval
+}
+
 # Empty will use the default config, we never want this when run from here, so
 # the -u saves us.
 #synmark_cfg=""
@@ -245,8 +261,9 @@ source ${GLX_RUNNER}
 
 for mesa in $MESA_LIBS; do
 	if is_debug_build ${mesa}/usr/local/lib ; then
-		echo "Trying to benchmark a debug build ($mesa). Abort!"
-		exit 1
+		if asksure "${mesa} is a debug build. Quit"; then
+			exit 1
+		fi
 	fi
 done
 
