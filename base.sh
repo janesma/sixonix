@@ -176,7 +176,7 @@ function gbm_env() {
 
 function is_debug_build() {
 	local mesa_dir=$1
-	readelf -S ${mesa_dir}/dri/i965_dri.so | grep -q debug
+	readelf -s ${mesa_dir}/dri/i965_dri.so | grep -q nir_validate_shader
 	return $?
 }
 
