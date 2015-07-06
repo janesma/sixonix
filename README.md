@@ -1,25 +1,24 @@
 SIXONIX
 =======
+Sixonix is a very barebones set of scripts which enable the user to run various 
+benchmarks and collate the data. 
 
-Sixonix is a set of scripts which enable the user to run various benchmarks and
-collate the data, with the intention of benchmarking different GPU drivers. It
-is similar in nature to [Phoronix Test
-Suite](https://github.com/phoronix-test-suite/phoronix-test-suite). In fact, if
-you want benchmarking tools for yourself to work out of the box, that is a much
-better project for several reasons.
+Running benchmarks and collecting the data are surprisingly difficult to execute 
+in a reliable manner. The problem sixonix is trying to solve is to enable 
+benchmarking of different drivers, on the same system, while eliminating as much
+user error (ie. using a debug build of mesa) and system noise (using incorrect 
+resolutions) as possible. It also attempts to do one step better than, 
+"run ministat" (it will do that too, if you wish).
 
-Sixonix is a very barebones set of scripts. It requires a lot of user
-intervention if one intends to do anything but utilize the default configuration
-and recipe. Benchmarking and statistics is surprisingly difficult to get right.
-The project intends to eliminate as much user error as possible, but users of
-this infrastructure should do some amount of manual verification for at least
-the first few times they use a script.
+If one intends to do anything but utilize the default configuration and recipe, 
+it will likely require a lot of user modification - and therefore that's not 
+recommended. **Although the project intends to eliminate as much user error as 
+possible, users of this infrastructure should do some amount of manual 
+verification for at least the first few times they use this tool, and after any 
+benchmark updates.**
 
 Dependencies
 ============
-
-I will not mention bash explicitly. If you don't have bash on your system, I do
-not want you to use this tool.
 
 [run_shuffled_benchmarks.sh](run_shuffled_benchmarks.sh):
 - none?
@@ -36,7 +35,6 @@ not want you to use this tool.
 
 Installation
 ============
-
 Assuming you know me, it's pretty esay to get started.
 
 1. Clone the sixonix repo.
@@ -46,14 +44,13 @@ Usage
 =====
 [The benchmark shuffler](run_shuffled_benchmarks.sh) will run a random mesa
 version with and a random benchmark. Obviously you can customize things to your
-hearts content, but if you want it to just work, you can follow the recipe below 
+heart's content, but if you want it to just work, you can follow the recipe below 
 which will test mesa-slow vs mesa-fast
 
 Once the run is complete, you may use the included script for generating
 statistics
 
 ### Execution
-
 The runner as it exists today depends on underscore " _ " within the file names to
 determine various information about the benchmark name, and which mesa is
 running. Let's not argue about the best way to do it - just don't name your mesa
@@ -89,7 +86,6 @@ an execution.log file is created so one can quickly see the order in which
 things ran.
 
 ### Post execution
-
 By default, both statistics scripts will only output the tests which it finds to
 be statistically significant. Using the -v option will display all results.
 new_stats is what people should be using, but it's still very much a work in
