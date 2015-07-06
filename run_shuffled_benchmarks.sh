@@ -293,6 +293,8 @@ done
 
 shuffle
 
+dump_system_info "$MESA_LIBS" execution.log
+
 for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 	before=$(date)
 	test_name=$(echo ${TEST_LIST[i]} | awk '{print $NF}')

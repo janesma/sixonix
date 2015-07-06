@@ -174,6 +174,15 @@ function gbm_env() {
 	export PIGLIT_PLATFORM=gbm
 }
 
+function dump_system_info() {
+	echo $(uname -rvmp) >> $2
+	for mesa in $1; do
+		mesa_ver=$(strings $mesa/usr/local/lib/dri/i965_dri.so  | grep 'git-' | \
+			awk '{print $3 " " $4}')
+		echo "$mesa = $mesa_ver" >> $2
+	done
+}
+
 function is_debug_build() {
 	local mesa_dir=$1
 	readelf -s ${mesa_dir}/dri/i965_dri.so | grep -q nir_validate_shader
