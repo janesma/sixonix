@@ -83,11 +83,15 @@ function jordanatic() {
 }
 
 function gfxbench31() {
-	${2}/testfw_app -w $RES_X -h $RES_Y \
+# anecdotal evidence suggests that if you set a -w, or -h, the benchmark won't
+# actually run in fullscreen mode. However, you must set the offscreen width +
+# height correctly.
+	${2}/testfw_app \
+		--ei -fullscreen=1 \
 		--ei -offscreen_width=$RES_X --ei -offscreen_height=$RES_Y \
-		-b ${2} -t ${1} --ei -fullscreen=1 \
+		-b ${2} -t ${1} \
 		--ei -play_time=30000 \
-		--gfx glfw --ei -fps_log_window=1 | \
+		--gfx glfw | \
 		grep fps | awk -F"[ ,]" "{printf \"%.3f\\n\", \$6}"
 }
 
