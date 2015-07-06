@@ -27,17 +27,17 @@ function rand() {
 }
 
 function shuffle() {
-   local i tmp size max
+	local i tmp size max
 
-   # $RANDOM % (i+1) is biased because of the limited range of $RANDOM
-   # Compensate by using a range which is a multiple of the array size.
-   size=${#TEST_LIST[*]}
-   max=$(( 32768 / size * size ))
+	# $RANDOM % (i+1) is biased because of the limited range of $RANDOM
+	# Compensate by using a range which is a multiple of the array size.
+	size=${#TEST_LIST[*]}
+	max=$(( 32768 / size * size ))
 
-   for ((i=size-1; i>0; i--)); do
-      rand $size
-      tmp=${TEST_LIST[i]} TEST_LIST[i]=${TEST_LIST[r]} TEST_LIST[r]=$tmp
-   done
+	for ((i=size-1; i>0; i--)); do
+		rand $size
+		tmp=${TEST_LIST[i]} TEST_LIST[i]=${TEST_LIST[r]} TEST_LIST[r]=$tmp
+	done
 }
 
 # Empty will use the default config, we never want this when run from here, so
