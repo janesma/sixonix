@@ -263,6 +263,13 @@ for mesa in $MESA_LIBS; do
 			exit 1
 		fi
 	fi
+
+	# FIXME: The statistics scripts can't handle mesa names with an _ in it.
+	if [ ${mesa} -a -z "${mesa/*_*}" ] ; then
+		if asksure "${mesa} has an underscore in it. Quit"; then
+			exit 1
+		fi
+	fi
 done
 
 # The runner will later set up the real paths, but we want the display setup
