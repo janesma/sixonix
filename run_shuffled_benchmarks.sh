@@ -65,8 +65,6 @@ function populate_full_test_list() {
 	local output=$2
 
 	if [[ "$GLBENCH" = "true" ]] ; then
-		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib BLEND | $TEE bench_blend_${output}"
-		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib BLEND_O | $TEE bench_blendoff_${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib FILL | $TEE bench_fill_${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib FILL_O | $TEE bench_filloff_${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib EGYPT | $TEE bench_egypt_${output}"
