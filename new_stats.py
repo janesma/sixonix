@@ -197,6 +197,10 @@ if __name__ == "__main__":
 
     CONFIDENCE_INTERVAL = 1-args.confidence/100
 
+    RETROWS = list()
+    MESAS, BENCHMARKS, DATABASE = parse_results()
+    Row = namedtuple('Row', tuple_name(MESAS))
+
     if args.file1 and args.file2:
         mesa1 = parse_single(args.file1.name)
         mesa2 = parse_single(args.file2.name)
@@ -207,9 +211,6 @@ if __name__ == "__main__":
                              dtype=np.dtype(np.float32))))
         exit(0)
 
-    RETROWS = list()
-    MESAS, BENCHMARKS, DATABASE = parse_results()
-    Row = namedtuple('Row', tuple_name(MESAS))
 
     process(RETROWS, MESAS, BENCHMARKS, DATABASE)
     create_row0(RETROWS, MESAS)
