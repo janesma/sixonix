@@ -299,6 +299,7 @@ done
 shuffle
 
 dump_system_info "$MESA_LIBS" execution.log
+echo "Resolution: ${RES_X}x${RES_Y}" >> execution.log
 
 for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 	before=$(date)
