@@ -195,7 +195,7 @@ if __name__ == "__main__":
                         (Equivalent to "-c 0")')
     args = parser.parse_args()
 
-    CONFIDENCE_INTERVAL = 1-args.confidence/100
+    CONFIDENCE_INTERVAL = float("{0:.2f}".format(1-args.confidence/100))
 
     RETROWS = list()
     MESAS, BENCHMARKS, DATABASE = parse_results()
