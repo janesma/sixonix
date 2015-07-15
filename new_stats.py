@@ -5,12 +5,10 @@ functions may be used independently if desired."""
 import argparse
 import csv
 import io
-import itertools
 import math
 import numpy as np
 import os
 import subprocess
-#import sys
 from collections import defaultdict
 from collections import namedtuple
 from enum import Enum
@@ -48,8 +46,8 @@ def determine_significance(mesa1, mesa2):
 
     In the best case, we can determine a normal distribution, and equal
     variance. Once determined we can use the independent t-test function if the
-    values are of equal variance.  If we have normal data, but the variance is unequal, the welch t-test is
-    used.
+    values are of equal variance.  If we have normal data, but the variance is
+    unequal, the welch t-test is used.
     http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
     http://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes.2C_unequal_variances
 
@@ -77,10 +75,11 @@ def determine_significance(mesa1, mesa2):
 
     if args.ttest:
         t, p = stats.ttest_ind(mesa1, mesa2, equal_var=equal_variance)
-        return (p, normality == Distribution.Normal, "t-test" if equal_variance else "Welch's")
+        return (p, normality == Distribution.Normal,
+                "t-test" if equal_variance else "Welch's")
     elif args.mannwhitney:
         u, p = stats.mannwhitneyu(mesa1, mesa2)
-        p *= 2 # We want a 2-tailed p-value
+        p *= 2  # We want a 2-tailed p-value
         return (p, len(mesa1) < 20 or len(mesa2) < 20, "Mann-Whitney")
 
     if normality == Distribution.Normal:
@@ -88,17 +87,18 @@ def determine_significance(mesa1, mesa2):
         return (p, False, "t-test" if equal_variance else "Welch's")
     else:
         u, p = stats.mannwhitneyu(mesa1, mesa2)
-        p *= 2 # We want a 2-tailed p-value
+        p *= 2  # We want a 2-tailed p-value
         flawed = len(mesa1) < 20 or len(mesa2) < 20
         return (p, flawed, "Mann-Whitney")
 
 
 def process_comparison(bench, mesa1, mesa2):
-    p_value, flawed, test_name = determine_significance(mesa1['values'], mesa2['values'])
-    row = Row(bench, mesa1['average'], mesa2['average'],
-              mesa2['average'] - mesa1['average'],
-              float("{0:.2f}".format(100 * (mesa2['average'] - mesa1['average']) / mesa1['average'])),
-              p_value < CONFIDENCE_INTERVAL, flawed, test_name)
+    p, flawed, name = determine_significance(mesa1['values'], mesa2['values'])
+    diff_raw = mesa2['average'] - mesa1['average']
+    diff_percent = diff_raw / mesa1['average']
+    row = Row(bench, mesa1['average'], mesa2['average'], diff_raw,
+              float("{0:.2f}".format(100 * diff_percent)),
+              p < CONFIDENCE_INTERVAL, flawed, name)
     return row
 
 
@@ -147,7 +147,8 @@ def parse_results():
 
 
 def create_row0(retrows, mesas):
-    names = ["Benchmark"] + list(mesas) + ["diff", '%diff', "significant", "flawed", "test"]
+    names = ["Benchmark"] + list(mesas) + \
+            ["diff", '%diff', "significant", "flawed", "test"]
     retrows.insert(0, Row._make(names))
 
 
@@ -211,18 +212,21 @@ if __name__ == "__main__":
                              dtype=np.dtype(np.float32))))
         exit(0)
 
-
     process(RETROWS, MESAS, BENCHMARKS, DATABASE)
     create_row0(RETROWS, MESAS)
 
     if args.output:
-            c_writer = csv.writer(args.output, delimiter=',',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            c_writer = csv.writer(args.output, delimiter=',',  quotechar='|',
+                                  quoting=csv.QUOTE_MINIMAL)
             c_writer.writerows(RETROWS)
     else:
             output = io.StringIO()
-            c_writer = csv.writer(output, delimiter=' ',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            # Uncomment the below to dump the raw csv
-            #c_writer = csv.writer(sys.stdout, delimiter=' ',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            c_writer = csv.writer(output, delimiter=' ',  quotechar='|',
+                                  quoting=csv.QUOTE_MINIMAL)
+            """Uncomment the below to dump the raw csv
+            c_writer = csv.writer(sys.stdout, delimiter=' ',  quotechar='|',
+                                  quoting=csv.QUOTE_MINIMAL)
+            """
             c_writer.writerows(RETROWS)
             run_column(output.getvalue())
             output.close()
