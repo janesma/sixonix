@@ -56,6 +56,32 @@ function asksure() {
         return $retval
 }
 
+# Does a read of user input which is effectively a non-blocking read. If the
+# user pressed something this function will handle it.
+#
+# Returns 0 if the caller should bailout, 1 otherwise
+function handle_user_input() {
+	# Do a quick read to see if the user input anything.
+	# From 'help read':
+	# The return code is zero, unless end-of-file is encountered, read
+	# times out (in which case it's greater than 128), a variable assignment
+	# error occurs ...
+	read -t .01 -n 1 -s command
+	if [[ $? -eq 0 ]] ; then
+		case "$command" in
+			p) read -n 1 -p "PAUSED (q to quit)" -s second_in_command
+				case $second_in_command in
+					q) return 0 ;;
+					*) return 1 ;;
+				esac
+				;;
+		#	v) toggle verbosity
+		esac
+	fi
+
+	return 1;
+}
+
 # Empty will use the default config, we never want this when run from here, so
 # the -u saves us.
 #synmark_cfg=""
@@ -336,6 +362,10 @@ for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 
 	elapsed=$(date -d @$(( $(date -d "now" +%s) - $(date -d "$before" +%s))) -u +'%M:%S')
 	[[ "$VERBOSE" = "true" ]] && echo "elapsed: $elapsed"
+
+	if handle_user_input ; then
+		i=${#TEST_LIST[*]}
+	fi
 done
 
 echo
