@@ -32,13 +32,23 @@ Dependencies
 - scipy
 - ghc - lol, just kidding
 
+Benchmarks
+==========
+- [Unigine Heaven, Valley](http://unigine.com/)
+- [GFXBench 2.7, 3, 3.1](https://gfxbench.com)
+- [GPUTest](http://www.geeks3d.com/gputest/)
+- [Xonotic](http://www.xonotic.org/)
+- [Warsow](https://www.warsow.net/)
+- [MegaGlest](http://megaglest.org/)
+- Synmark (internal benchmark)
+
 Benchmark Dependencies
 ======================
 Here is a brief list of dependencies that I don't have on a new Arch install.
 Other distros probably are missing other things. You're on your own.
 
-GFXBench3.1: libXi.so.6, libXrandr.so.2
-Warsow 1.5: libpng12
+- GFXBench3.1: libXi.so.6, libXrandr.so.2
+- Warsow 1.5: libpng12
 
 Installation
 ============
