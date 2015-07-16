@@ -235,7 +235,7 @@ function init_synmark() {
 }
 
 SCRIPT_PATH=$(realpath $(dirname $BASH_SOURCE))
-CONFIGS_PATH=${SCRIPT_PATH}/configs/
+CONFIGS_PATH=${SCRIPT_PATH}/conf.d/
 declare -A TESTS
 
 # Open source games
