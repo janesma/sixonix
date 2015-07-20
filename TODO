@@ -1,3 +1,7 @@
+Use optional RAPL throttler, something like:
+sudo echo 5815600 > /sys/class/powercap/intel-rapl/intel-rapl\:0/constraint_0_power_limit_uw
+
+
 GAME      STATUS
 0 AD | 4 year old ticket |  http://trac.wildfiregames.com/ticket/837
 OpenDungeons | Ogre based | working on ogre benchmark
