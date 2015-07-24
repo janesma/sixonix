@@ -10,7 +10,7 @@
 # Run GLX with menu and custom mesa:
 #	glx.sh /foo/bar/mesa/lib
 # Run GLX with menu and system mesa:
-#	base.sh
+#	glx.sh
 
 # By default the script will try to use the native resolution. However in
 # failure cases, it will warn and fall back to this resolution.
@@ -20,6 +20,7 @@ DEFAULT_RES_Y=1080
 # Customize this to your own environments.
 BENCHDIR=$HOME/benchmarks/
 SYNMARK_PATH=$BENCHDIR/Synmark2-6.00/
+DEFAULT_LIBS=/usr/lib/xorg/modules/
 
 function get_hang_count() {
 	return $(dmesg | grep "GPU HANG" | wc -l)
@@ -78,9 +79,12 @@ function set_dimensions() {
 
 function glx_env() {
 	env_sanitize
+
+	local path=${1:-$DEFAULT_LIBS}
+
 	export vblank_mode=0
-	export LD_LIBRARY_PATH=${1}
-	export LIBGL_DRIVERS_PATH=${1}/dri
+	export LD_LIBRARY_PATH=$path
+	export LIBGL_DRIVERS_PATH=$path/dri
 	export DISPLAY=:0
 	set +o nounset
 	[[ -z $RES_X ]] && get_dimensions
@@ -88,9 +92,12 @@ function glx_env() {
 
 function gbm_env() {
 	env_sanitize
+
+	local path=${1:-$DEFAULT_LIBS}
+
 	export vblank_mode=0
-	export LD_LIBRARY_PATH=${1}
-	export LIBGL_DRIVERS_PATH=${1}/dri
+	export LD_LIBRARY_PATH=$path
+	export LIBGL_DRIVERS_PATH=$path/dri
 	export EGL_DRIVERS_PATH=${LIBGL_DRIVERS_PATH}
 	export EGL_PLATFORM=drm
 	export PIGLIT_PLATFORM=gbm
