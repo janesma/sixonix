@@ -155,6 +155,10 @@ for conf_file in ${CONFIGS_PATH}/*.sh; do
 	source "$conf_file"
 done
 
+# Synmark
+TESTS[SYNMARK]='cd $SYNMARK_PATH ; ./synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
+
+
 # If sourced from another script, just leave
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return
 
