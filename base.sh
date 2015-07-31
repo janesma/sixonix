@@ -176,6 +176,11 @@ fi
 [[ -n $SKIP_RUNNER_INIT ]] && init
 
 if [[ $# -eq 0 ]]; then
+
+	# SYNMARK is not runnable from the selector menu because it requires a
+	# second argument. Remove it from the array before displaying the
+	# choices.
+	unset TESTS[SYNMARK]
 	prompt="Pick an option:"
 
 	PS3="Select test (just hit ctrl+c to exit)"
