@@ -69,7 +69,7 @@ def determine_significance(mesa1, mesa2):
         if (normal < NORMAL_CI):
             normality = Distribution.Non_normal
     except ValueError:
-        normality = Distribution.Unkown
+        normality = Distribution.Unknown
 
     equal_variance = is_equal_variance(mesa1, mesa2)
 
