@@ -14,7 +14,6 @@ function init_synmark_cfg() {
 
 function synmark()
 {
-	set -eux
 	syn_test=$1
 	init_synmark_cfg
 	cat $synmark_cfg
