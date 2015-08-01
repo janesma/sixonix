@@ -18,8 +18,7 @@ DEFAULT_RES_X=1920
 DEFAULT_RES_Y=1080
 
 # Customize this to your own environments.
-BENCHDIR=$HOME/benchmarks/
-SYNMARK_PATH=$BENCHDIR/Synmark2-6.00/
+BENCHDIR=/opt/benchmarks/
 DEFAULT_LIBS=/usr/lib/xorg/modules/
 
 function get_hang_count() {
@@ -129,24 +128,6 @@ function check_gpu_hang() {
 	fi
 }
 
-synmark_cfg=""
-
-function init_synmark() {
-	# Create a synmark config file with the proper resolutions
-	[[ -n $synmark_cfg ]] && echo "Synmark init can only be called once" && exit -1
-	get_dimensions
-	#synmark requires configs to be specified as "-name" without .cfg, but
-	#the file must actually be named.cfg
-	synmark_cfg=$(mktemp -p $SYNMARK_PATH --suffix=.cfg)
-	echo "FullScreen = 1;" >> $synmark_cfg
-	echo "ScreenWidth = ${RES_X};" >> $synmark_cfg
-	echo "ScreenHeight = ${RES_Y};" >> $synmark_cfg
-	echo "RenderingTime = 5.0;" >> $synmark_cfg
-	echo "ValidateImage = 0;" >> $synmark_cfg
-
-	echo $synmark_cfg #return to caller
-}
-
 SCRIPT_PATH=$(realpath $(dirname $BASH_SOURCE))
 CONFIGS_PATH=${SCRIPT_PATH}/conf.d/
 declare -A TESTS
@@ -154,10 +135,6 @@ declare -A TESTS
 for conf_file in ${CONFIGS_PATH}/*.sh; do
 	source "$conf_file"
 done
-
-# Synmark
-TESTS[SYNMARK]='cd $SYNMARK_PATH ; ./synmark2 TESTCONFIGHERE TESTNAMEHERE | grep FPS | awk "{print \$2}"'
-
 
 # If sourced from another script, just leave
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return
@@ -190,26 +167,9 @@ if [[ $# -eq 0 ]]; then
 	    esac
 	done
 else
-	if [[ "$1" = "SYNMARK" ]] ; then
-		syn_test=$2
-		if [[ $# -eq 3 ]] ; then
-			synmark_cfg="-$(basename -s .cfg $3)"
-		else
-			#FIXME: leaves a tmp file
-			synmark_cfg="-$(basename -s .cfg $(init_synmark))"
-		fi
-		set -o nounset
-		cmd=${TESTS[$1]/TESTNAMEHERE/$syn_test}
-		cmd=${cmd/TESTCONFIGHERE/$synmark_cfg}
-		set +o nounset
-		shift
-		shift
-		eval $cmd
-	else
-		index=$1
-		shift
-		set -o nounset
-		eval "${TESTS[$index]} $*"
-		set +o nounset
-	fi
+	index=$1
+	shift
+	set -o nounset
+	eval "${TESTS[$index]} $*"
+	set +o nounset
 fi

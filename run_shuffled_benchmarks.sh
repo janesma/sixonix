@@ -305,11 +305,6 @@ glx_env FAKE_PATH
 init
 export SKIP_RUNNER_INIT=1
 
-if [[ "$SYNMARK" = "true" ]] ; then
-	synmark_cfg=$(init_synmark)
-	[[ "$VERBOSE" = "true" ]] && cat $synmark_cfg
-fi
-
 ndx=0
 for ((i=1;i<=ITERATIONS;i++)); do
 	for mesa in $MESA_LIBS; do
@@ -372,5 +367,3 @@ echo
 
 #remove empty files
 [[ "$POST_DELETE" = "true" ]] && rm -f $(find . -empty)
-
-[[ "$SYNMARK" = "true" ]] && rm $synmark_cfg
