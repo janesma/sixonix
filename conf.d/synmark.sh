@@ -16,7 +16,6 @@ function synmark()
 {
 	syn_test=$1
 	init_synmark_cfg
-	cat $synmark_cfg
 	./synmark2 "-$(basename -s .cfg $synmark_cfg)" $syn_test | grep FPS | awk "{print \$2}"
 	rm $synmark_cfg
 	unset synmark_cfg
