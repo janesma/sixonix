@@ -35,6 +35,11 @@ def is_equal_variance(mesa1, mesa2):
     should have checked this for us.
     TODO: Implement Levene’s test for non-normally distributed data
     """
+
+    # scipy really doesn't like 0 variance
+    if np.var(mesa1) == 0 and np.var(mesa1) == np.var(mesa2):
+        return True
+
     # http://www.itl.nist.gov/div898/handbook/eda/section3/eda357.htm
     T, _p = stats.bartlett(mesa1, mesa2)
     x2 = chisquare_critical(BARTLETT_CI, len(mesa1))
@@ -83,7 +88,11 @@ def determine_significance(mesa1, mesa2):
         return (p, len(mesa1) < 20 or len(mesa2) < 20, "Mann-Whitney")
 
     if normality == Distribution.Normal:
-        t, p = stats.ttest_ind(mesa1, mesa2, equal_var=equal_variance)
+        error_handler='raise'
+        if np.var(mesa1) == 0 and equal_variance:
+            error_handler='ignore'
+        with np.errstate(divide=error_handler):
+            t, p = stats.ttest_ind(mesa1, mesa2, equal_var=equal_variance)
         return (p, False, "t-test" if equal_variance else "Welch's")
     else:
         u, p = stats.mannwhitneyu(mesa1, mesa2)
