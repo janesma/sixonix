@@ -114,7 +114,10 @@ def process(retrows, mesas, benchmarks, database):
                                  database[bench][mesas[0]],
                                  database[bench][mesas[1]])
         if args.verbose or row.ttest and not row.flawed:
-            retrows.append(row)
+            if args.sanitize:
+                retrows.append([row.name, row.pdiff])
+            else:
+                retrows.append(row)
 
 
 def parse_single(filename):
@@ -147,9 +150,17 @@ def parse_results():
 
 
 def create_row0(retrows, mesas):
-    names = ["Benchmark"] + list(mesas) + \
-            ["diff", '%diff', "significant", "flawed", "test"]
-    retrows.insert(0, Row._make(names))
+    if args.sanitize:
+        col2 = mesas[0] + "->" + mesas[1]
+        names = ["Benchmark", col2]
+    else:
+        names = ["Benchmark"] + list(mesas) + \
+                ["diff", '%diff', "significant", "flawed", "test"]
+
+    if args.sanitize:
+        retrows.insert(0, names)
+    else:
+        retrows.insert(0, Row._make(names))
 
 
 def tuple_name(mesas):
@@ -194,6 +205,9 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--verbose', action="store_true",
                         help='Display all results, regardless of significance. \
                         (Equivalent to "-c 0")')
+    parser.add_argument('-s', '--sanitize', action="store_true",
+                        help='Display sanitized data results (no absolute data \
+                        and no useless information)')
     args = parser.parse_args()
 
     CONFIDENCE_INTERVAL = float("{0:.2f}".format(1-args.confidence/100))
