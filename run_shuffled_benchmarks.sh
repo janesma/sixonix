@@ -323,7 +323,7 @@ dump_system_info "$MESA_LIBS" execution.log
 echo "Resolution: ${RES_X}x${RES_Y}" >> execution.log
 
 for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
-	before=$(date)
+	before=$(date +%s)
 	test_name=$(echo ${TEST_LIST[i]} | awk '{print $NF}')
 
 	if [[ "$VERBOSE" = "true" ]] ; then
@@ -355,7 +355,7 @@ for (( i = 0 ; i < ${#TEST_LIST[*]} ; i++ )) do
 		echo "$test_name $fps $(date +'%T')" >> execution.log
 	fi
 
-	elapsed=$(date -d @$(( $(date -d "now" +%s) - $(date -d "$before" +%s))) -u +'%M:%S')
+	elapsed=$(date -d @$(( $(date -d "now" +%s) - $before)) -u +'%M:%S')
 	[[ "$VERBOSE" = "true" ]] && echo "elapsed: $elapsed"
 
 	if handle_user_input ; then
