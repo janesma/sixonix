@@ -132,7 +132,7 @@ def process(retrows, mesas, benchmarks, database):
 def parse_single(filename):
     useless, benchmark_name, mesa_version = filename.split('_')
     assert useless == "bench"
-    vals = np.loadtxt(filename, dtype=np.dtype(np.float32))
+    vals = np.loadtxt(filename, dtype=np.dtype(np.float32), comments='!!!')
     return {'name': mesa_version,
             'bench': benchmark_name,
             'filename': filename,
