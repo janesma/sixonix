@@ -21,6 +21,16 @@ DEFAULT_RES_Y=1080
 BENCHDIR=/opt/benchmarks/
 DEFAULT_LIBS=/usr/lib/xorg/modules/
 
+EXPECTED_VERSION=1.0
+
+function get_benchmarks_version() {
+	if [ ! -f ${BENCHDIR}/VERSION ] ; then
+		export BENCH_VERSION="pre-release"
+	else
+		export BENCH_VERSION=$(head -n 1 ${BENCHDIR}/VERSION)
+	fi
+}
+
 function get_hang_count() {
 	return $(dmesg | grep "GPU HANG" | wc -l)
 }
@@ -51,6 +61,10 @@ function env_sanitize() {
 	unset RES_X
 	unset RES_Y
 	unset HANG_COUNT
+	get_benchmarks_version
+	if [[ "$EXPECTED_VERSION" != "$BENCH_VERSION" ]] ; then
+		echo "Unexpected benchmark version: $EXPECTED_VERSION != $BENCH_VERSION"
+	fi
 }
 
 function get_dimensions() {
@@ -103,7 +117,9 @@ function gbm_env() {
 }
 
 function dump_system_info() {
+	get_benchmarks_version
 	echo $(uname -rvmp) >> $2
+	echo "Benchmark version: ${BENCH_VERSION}" >> $2
 	for mesa in $1; do
 		mesa_ver=$(strings $mesa/usr/local/lib/dri/i965_dri.so  | grep 'git-' | \
 			awk '{print $3 " " $4}')
