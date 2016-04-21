@@ -1,4 +1,4 @@
-SYNMARK_PATH=$BENCHDIR/Synmark2-6.00/
+SYNMARK_PATH=$BENCHDIR/_deprecated_/Synmark2-6.00/
 
 function init_synmark_cfg() {
 	# Create a synmark config file with the proper resolutions
@@ -22,4 +22,4 @@ function synmark()
 }
 
 # Synmark
-TESTS[SYNMARK60]='cd $SYNMARK_PATH ; synmark $1'
+#TESTS[SYNMARK60]='cd $SYNMARK_PATH ; synmark $1'
