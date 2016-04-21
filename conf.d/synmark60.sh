@@ -22,4 +22,4 @@ function synmark()
 }
 
 # Synmark
-TESTS[SYNMARK]='cd $SYNMARK_PATH ; synmark $1'
+TESTS[SYNMARK60]='cd $SYNMARK_PATH ; synmark $1'
