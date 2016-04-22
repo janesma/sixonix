@@ -48,7 +48,7 @@ Here is a brief list of dependencies that I don't have on a new Arch install.
 Other distros probably are missing other things. You're on your own.
 
 - GFXBench3.1: libXi.so.6, libXrandr.so.2
-- Warsow 1.5: libpng12
+- Warsow 2.1: libpng12
 
 Installation
 ============
