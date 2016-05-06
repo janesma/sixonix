@@ -1,20 +1,20 @@
 SIXONIX
 =======
-Sixonix is a very barebones set of scripts which enable the user to run various 
-benchmarks and collate the data. 
+Sixonix is a very barebones set of scripts which enable the user to run various
+benchmarks and collate the data.
 
-Running benchmarks and collecting the data are surprisingly difficult to execute 
-in a reliable manner. The problem sixonix is trying to solve is to enable 
+Running benchmarks and collecting the data are surprisingly difficult to execute
+in a reliable manner. The problem sixonix is trying to solve is to enable
 benchmarking of different drivers, on the same system, while eliminating as much
-user error (ie. using a debug build of mesa) and system noise (using incorrect 
-resolutions) as possible. It also attempts to do one step better than, 
+user error (ie. using a debug build of mesa) and system noise (using incorrect
+resolutions) as possible. It also attempts to do one step better than,
 "run ministat" (it will do that too, if you wish).
 
-If one intends to do anything but utilize the default configuration and recipe, 
-it will likely require a lot of user modification - and therefore that's not 
-recommended. **Although the project intends to eliminate as much user error as 
-possible, users of this infrastructure should do some amount of manual 
-verification for at least the first few times they use this tool, and after any 
+If one intends to do anything but utilize the default configuration and recipe,
+it will likely require a lot of user modification - and therefore that's not
+recommended. **Although the project intends to eliminate as much user error as
+possible, users of this infrastructure should do some amount of manual
+verification for at least the first few times they use this tool, and after any
 benchmark updates.**
 
 Dependencies
@@ -52,7 +52,7 @@ Other distros probably are missing other things. You're on your own.
 
 Installation
 ============
-Assuming you know me, it's pretty esay to get started.
+Assuming you know me, it's pretty easy to get started.
 
 1. Clone the sixonix repo.
 2. Copy my benchmarks directory
@@ -61,7 +61,7 @@ Usage
 =====
 [The benchmark shuffler](run_shuffled_benchmarks.sh) will run a random mesa
 version with and a random benchmark. Obviously you can customize things to your
-heart's content, but if you want it to just work, you can follow the recipe below 
+heart's content, but if you want it to just work, you can follow the recipe below
 which will test mesa-slow vs mesa-fast
 
 Once the run is complete, you may use the included script for generating
@@ -109,9 +109,9 @@ new_stats is what people should be using, but it's still very much a work in
 progress.
 
 #### [new_stats](new_stats.py)
-This is the default statistics generator. [new_stats.py](new_stats.py) uses 
+This is the default statistics generator. [new_stats.py](new_stats.py) uses
 numpy for all the statistical information and tends to be very finicky about the
-input data. If you've got enough samples, you should definitely use this, 
+input data. If you've got enough samples, you should definitely use this,
 otherwise, either munge the script, or use do_stats.
 
 - Default statistical comparison (all results) of two GL drivers:
@@ -122,7 +122,7 @@ otherwise, either munge the script, or use do_stats.
 
 #### [do_stats](do_stats.sh)
 The original [do_stats](do_stats.sh) script defers to ministat for all the
-statistical generation. What's nice about this script is it doesn't care about 
+statistical generation. What's nice about this script is it doesn't care about
 sample numbers or distributions, or anything like that. The bash quickly grew
 unmaintainable, and so it's abandoned. (ie. use at your own risk).
 
