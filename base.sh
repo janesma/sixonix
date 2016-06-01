@@ -56,7 +56,6 @@ function init() {
 
 function env_sanitize() {
 	unset BENCH_VERSION
-	unset DISPLAY
 	unset EGL_DRIVERS_PATH
 	unset EGL_PLATFORM
 	unset HANG_COUNT
@@ -99,7 +98,6 @@ function glx_env() {
 	export vblank_mode=0
 	export LD_LIBRARY_PATH=$path
 	export LIBGL_DRIVERS_PATH=$path/dri
-	export DISPLAY=:0
 	set +o nounset
 	[[ -z $RES_X ]] && get_dimensions
 }
