@@ -99,7 +99,6 @@ function glx_env() {
 	export vblank_mode=0
 	export LD_LIBRARY_PATH=$path
 	export LIBGL_DRIVERS_PATH=$path/dri
-	export DISPLAY=:0
 	set +o nounset
 	[[ -z $RES_X ]] && get_dimensions
 }
