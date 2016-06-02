@@ -33,7 +33,6 @@ function jordanatic() {
 		echo
 		echo "The benchmark has been aborted. No log file has been written."
 	fi
-	popd
 }
 
 TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null | \
