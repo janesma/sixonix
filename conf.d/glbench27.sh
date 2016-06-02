@@ -9,7 +9,7 @@ function gfxbench27() {
 		grep fps | awk -F "[()]" "{print \$2}" | awk "{print \$1}"
 }
 
-TESTS[TREX_2.7]='gfxbench27 GLB27_TRex_C24Z16_FixedTimeStep'
-TESTS[TREX_O_2.7]='gfxbench27 GLB27_TRex_C24Z16_FixedTimeStep_Offscreen'
+#TESTS[TREX_2.7]='gfxbench27 GLB27_TRex_C24Z16_FixedTimeStep'
+#TESTS[TREX_O_2.7]='gfxbench27 GLB27_TRex_C24Z16_FixedTimeStep_Offscreen'
 TESTS[EGYPT]='gfxbench27 GLB27_EgyptHD_inherited_C24Z16_FixedTime'
 TESTS[EGYPT_O]='gfxbench27 GLB27_EgyptHD_inherited_C24Z16_FixedTime_Offscreen'
