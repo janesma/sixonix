@@ -28,7 +28,11 @@ function synmark()
 {
 	syn_test=$1
 	init_synmark_cfg $syn_test
-	./synmark2 | grep FPS | awk "{print \$2}"
+	if [ -z ${DEBUGGER+x} ]; then
+		./synmark2 | grep FPS | awk "{print \$2}"
+	else
+		${DEBUGGER} ./synmark2
+	fi
 	rm $synmark_cfg
 	unset synmark_cfg
 }

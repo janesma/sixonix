@@ -17,10 +17,14 @@ function jordanatic() {
 	for e in ${1}; do
 		rm -f data/benchmark.log
 		echo + "$@" +exec effects-$e.cfg $p > data/engine.log
-		"$@" +exec effects-$e.cfg $p >>data/engine.log 2>&1 || true
-		grep "^MED: " data/engine.log | egrep -e "[0-9]+ frames" | awk "{print \$6}" # print results to the terminal
-		if grep '\]quit' data/engine.log >/dev/null; then
-			break
+		if [ -z ${DEBUGGER+x} ]; then
+			"$@" +exec effects-$e.cfg $p >>data/engine.log 2>&1 || true
+			grep "^MED: " data/engine.log | egrep -e "[0-9]+ frames" | awk "{print \$6}" # print results to the terminal
+			if grep '\]quit' data/engine.log >/dev/null; then
+				break
+			fi
+		else
+			"$@" +exec effects-$e.cfg $p
 		fi
 		cat data/engine.log >> data/jordanatic.log
 		cat data/benchmark.log >> data/jordanatic.log

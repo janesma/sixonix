@@ -102,6 +102,12 @@ something with an underscore " _ " in it.
 an execution.log file is created so one can quickly see the order in which
 things ran.
 
+### Debugging
+For convenience, a variable is define if one wants to invoke the debugger for
+one of the test. The debugger is started, and output is not suppressed if the
+DEBUGGER variable is defined. As an example:
+DEBUGGER="gdb --args" ~/scripts/sixonix/glx.sh /usr/lib/xorg/modules/ XONOTIC
+
 ### Post execution
 By default, both statistics scripts will only output the tests which it finds to
 be statistically significant. Using the -v option will display all results.

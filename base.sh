@@ -21,7 +21,7 @@ DEFAULT_RES_Y=1080
 BENCHDIR=/opt/benchmarks/
 DEFAULT_LIBS=/usr/lib/xorg/modules/
 
-EXPECTED_VERSION=1.1
+EXPECTED_VERSION=1.2
 
 function get_benchmarks_version() {
 	if [ ! -f ${BENCHDIR}/VERSION ] ; then
