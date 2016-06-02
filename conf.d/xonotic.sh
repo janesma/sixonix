@@ -15,11 +15,10 @@ function jordanatic() {
 		-benchmark demos/jordanatic.dem"
 
 	for e in ${1}; do
-		echo "Benchmarking on $e"
 		rm -f data/benchmark.log
 		echo + "$@" +exec effects-$e.cfg $p > data/engine.log
 		"$@" +exec effects-$e.cfg $p >>data/engine.log 2>&1 || true
-		grep "^MED: " data/engine.log # print results to the terminal
+		grep "^MED: " data/engine.log | egrep -e "[0-9]+ frames" | awk "{print \$6}" # print results to the terminal
 		if grep '\]quit' data/engine.log >/dev/null; then
 			break
 		fi
@@ -38,5 +37,4 @@ function jordanatic() {
 TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "normal" 2>/dev/null | \
 	egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 
-TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal" 2>/dev/null | \
-	egrep -e "[0-9]+ frames" | awk "{print \$6}"'
+TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal"'
