@@ -8,10 +8,10 @@ function unigine() {
 	sed "s/RES_X/${RES_X}/; s/RES_Y/${RES_Y}/" ${CONFIGS_PATH}/${bench}.cfg > $cfg
 	set -o nounset
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./bin
-	./bin/${bench}_x64 -engine_config ../$(basename $cfg)
+	./bin/${bench}_x64 -engine_config ../$(basename $cfg)  | grep -i fps | awk "{print \$2}"
 	set +o nounset
 }
 
-TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley | grep -i fps | awk "{print \$2}"'
-TESTS[HEAVEN]='cd $HEAVEN_PATH ; unigine $HEAVEN_PATH heaven | grep -i fps | awk "{print \$2}"'
+TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley'
+TESTS[HEAVEN]='cd $HEAVEN_PATH ; unigine $HEAVEN_PATH heaven'
 
