@@ -223,6 +223,12 @@ if __name__ == "__main__":
 
     RETROWS = list()
     MESAS, BENCHMARKS, DATABASE = parse_results()
+    if MESAS.__len__() > 2:
+        print("Only 2 mesa versions can be compared with this script. You have "
+                + str(MESAS.__len__()) + ":")
+        print(*MESAS, sep='\n')
+        exit(1)
+
     Row = namedtuple('Row', tuple_name(MESAS))
 
     if args.file1 and args.file2:
