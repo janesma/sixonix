@@ -50,17 +50,17 @@ function init() {
 }
 
 function env_sanitize() {
+	unset DISPLAY
+	unset EGL_DRIVERS_PATH
+	unset EGL_PLATFORM
+	unset HANG_COUNT
 	unset LD_LIBRARY_PATH
 	unset LIBGL_DRIVERS_PATH
-	unset LD_LIBRARY_PATH
 	unset PIGLIT_PLATFORM
-	unset vblank_mode
-	unset EGL_PLATFORM
-	unset EGL_DRIVERS_PATH
-	unset DISPLAY
 	unset RES_X
 	unset RES_Y
-	unset HANG_COUNT
+	unset vblank_mode
+
 	get_benchmarks_version
 	if [[ "$EXPECTED_VERSION" != "$BENCH_VERSION" ]] ; then
 		echo "Unexpected benchmark version: $EXPECTED_VERSION != $BENCH_VERSION"
