@@ -44,6 +44,11 @@ function init() {
 		xscreensaver-command -deactivate >/dev/null 2>&1
 	fi
 
+	get_benchmarks_version
+	if [[ "$EXPECTED_VERSION" != "$BENCH_VERSION" ]] ; then
+		echo "Unexpected benchmark version: $EXPECTED_VERSION != $BENCH_VERSION"
+	fi
+
 	# Get a count of number of GPU hangs at the start of the run
 	get_hang_count
 	export HANG_COUNT=$?
@@ -60,11 +65,6 @@ function env_sanitize() {
 	unset RES_X
 	unset RES_Y
 	unset vblank_mode
-
-	get_benchmarks_version
-	if [[ "$EXPECTED_VERSION" != "$BENCH_VERSION" ]] ; then
-		echo "Unexpected benchmark version: $EXPECTED_VERSION != $BENCH_VERSION"
-	fi
 }
 
 function get_dimensions() {
