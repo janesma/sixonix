@@ -94,7 +94,7 @@ function set_dimensions() {
 function glx_env() {
 	env_sanitize
 
-	local path=${1:-$DEFAULT_LIBS}
+	local path=${1}
 
 	export vblank_mode=0
 	export LD_LIBRARY_PATH=$path
@@ -107,7 +107,7 @@ function glx_env() {
 function gbm_env() {
 	env_sanitize
 
-	local path=${1:-$DEFAULT_LIBS}
+	local path=${1}
 
 	export vblank_mode=0
 	export LD_LIBRARY_PATH=$path
@@ -160,11 +160,11 @@ done
 # glx, then do the usual thing. Default to local mesa install
 script_name=`basename $0`
 if [[ $script_name = "gbm.sh" ]] ; then
-	gbm_env $1
-	shift
+	gbm_env ${1:-$DEFAULT_LIBS}
+	shift || true
 elif [[ $script_name = "glx.sh" ]] ; then
-	glx_env $1
-	shift
+	glx_env ${1:-$DEFAULT_LIBS}
+	shift || true
 fi
 
 [[ -n $SKIP_RUNNER_INIT ]] && init
