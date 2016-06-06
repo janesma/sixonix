@@ -14,14 +14,14 @@
 
 # By default the script will try to use the native resolution. However in
 # failure cases, it will warn and fall back to this resolution.
-DEFAULT_RES_X=1920
-DEFAULT_RES_Y=1080
+declare -r DEFAULT_RES_X=1920
+declare -r DEFAULT_RES_Y=1080
 
 # Customize this to your own environments.
-BENCHDIR=/opt/benchmarks/
-DEFAULT_LIBS=/usr/lib/xorg/modules/
+declare -r BENCHDIR=/opt/benchmarks/
+declare -r DEFAULT_LIBS=/usr/lib/xorg/modules/
 
-EXPECTED_VERSION=1.2
+declare -r EXPECTED_VERSION=1.2
 
 function get_benchmarks_version() {
 	if [ ! -f ${BENCHDIR}/VERSION ] ; then
