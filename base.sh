@@ -167,7 +167,7 @@ elif [[ $script_name = "glx.sh" ]] ; then
 	shift || true
 fi
 
-[[ -n $SKIP_RUNNER_INIT ]] && init
+[[ -n $SKIP_RUNNER_INIT ]] || init
 
 if [[ $# -eq 0 ]]; then
 
