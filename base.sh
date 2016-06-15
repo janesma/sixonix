@@ -56,7 +56,6 @@ function init() {
 
 function env_sanitize() {
 	unset BENCH_VERSION
-	unset DISPLAY
 	unset EGL_DRIVERS_PATH
 	unset EGL_PLATFORM
 	unset HANG_COUNT
