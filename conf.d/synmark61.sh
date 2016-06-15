@@ -2,6 +2,10 @@ SYNMARK_PATH=$BENCHDIR/Synmark2-6.10/
 SYNMARK_HOME=~/SynMark2Home/
 
 function init_synmark_cfg() {
+	local runtime=$1
+	local warmtime=$(bc -l <<< "scale=1; $runtime/2")
+
+
 	mkdir -p $SYNMARK_HOME
 	synmark_cfg="$SYNMARK_HOME/User.cfg"
 	echo "TestsToRun = \"$1\";" >> $synmark_cfg
@@ -14,9 +18,9 @@ function init_synmark_cfg() {
 	echo "DepthFormat = D24;" >> $synmark_cfg
 	echo "FrameBufferCount = 2;" >> $synmark_cfg
 	echo "WarmUpFrames = 3;" >> $synmark_cfg
-	echo "WarmUpTime = 5.0;" >> $synmark_cfg
+	echo "WarmUpTime = ${warmtime};" >> $synmark_cfg
 	echo "MeasureFrames = 10;" >> $synmark_cfg
-	echo "MeasureTime = 5.0;" >> $synmark_cfg
+	echo "MeasureTime = ${runtime};" >> $synmark_cfg
 	echo "DumpTimestamps = False;" >> $synmark_cfg
 	echo "DumpScreenshot = False;" >> $synmark_cfg
 	echo "ScreenshotFrameNumber = 0;" >> $synmark_cfg
@@ -27,7 +31,7 @@ function init_synmark_cfg() {
 function synmark()
 {
 	syn_test=$1
-	init_synmark_cfg $syn_test
+	init_synmark_cfg $syn_test "5.0"
 	if [ -z ${DEBUGGER+x} ]; then
 		./synmark2 | grep FPS | awk "{print \$2}"
 	else
