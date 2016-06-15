@@ -8,7 +8,7 @@ function do_warsow() {
 	if [ -z ${DEBUGGER+x} ]; then
 		./warsow.x86_64 +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 0 \
 			+set timedemo 1 +demo basewsw/benchsow.wdz20 \
-			+next "quit" 2> /dev/null 2>&1 ;
+			+next "quit" > /dev/null 2>&1 ;
 		grep frames basewsw/sixonix.log | awk '{print $5}'
 	else
 		${DEBUGGER} ./warsow.x86_64 +set fs_basepath "$WARSOW_PATH" +set fs_usehomedir 0 \
