@@ -31,7 +31,8 @@ function init_synmark_cfg() {
 function synmark()
 {
 	syn_test=$1
-	init_synmark_cfg $syn_test "5.0"
+	runtime=$2
+	init_synmark_cfg $syn_test $runtime
 	if [ -z ${DEBUGGER+x} ]; then
 		./synmark2 | grep FPS | awk "{print \$2}"
 	else
@@ -42,4 +43,5 @@ function synmark()
 }
 
 # Synmark
-TESTS[SYNMARK]='cd $SYNMARK_PATH ; synmark $1'
+TESTS[SYNMARK]='cd $SYNMARK_PATH ; synmark $1 "5.0"'
+TESTS[SYNMARK_LONG]='cd $SYNMARK_PATH ; synmark $1 "20.0"'

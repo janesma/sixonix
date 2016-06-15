@@ -175,6 +175,7 @@ if [[ $# -eq 0 ]]; then
 	# second argument. Remove it from the array before displaying the
 	# choices.
 	unset TESTS[SYNMARK]
+	unset TESTS[SYNMARK_LONG]
 	prompt="Pick an option:"
 
 	PS3="Select test (just hit ctrl+c to exit)"
