@@ -1,6 +1,7 @@
 XONOTIC_PATH=$BENCHDIR/Xonotic
 
 function jordanatic() {
+	local effects=$1
 	set -- ./xonotic-linux-sdl.sh
 	rm -f data/jordanatic.log
 	rm -f data/benchmark.log
@@ -14,7 +15,7 @@ function jordanatic() {
 		-benchmarkruns_skipfirst \
 		-benchmark demos/jordanatic.dem"
 
-	for e in ${1}; do
+	for e in ${effects}; do
 		rm -f data/benchmark.log
 		echo + "$@" +exec effects-$e.cfg $p > data/engine.log
 		if [ -z ${DEBUGGER+x} ]; then
