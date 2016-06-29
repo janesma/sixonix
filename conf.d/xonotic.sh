@@ -43,3 +43,4 @@ TESTS[XONOTIC_BIGKEY]='$XONOTIC_PATH/misc/tools/the-big-benchmark/sixonix.sh "no
 	egrep -e "[0-9]+ frames" | awk "{print \$6}"'
 
 TESTS[XONOTIC]='cd $XONOTIC_PATH ; jordanatic "normal"'
+TESTS[XONOTIC_ULTRA]='cd $XONOTIC_PATH ; jordanatic "ultra"'
