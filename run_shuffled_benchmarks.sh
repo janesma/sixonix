@@ -99,6 +99,8 @@ function populate_full_test_list() {
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX_O | $TEE bench_trexoff_${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN | $TEE bench_manhattan_${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | $TEE bench_manhattanoff_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib CAR_CHASE | $TEE bench_car_chase${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib CAR_CHASE_O | $TEE bench_car_chaseoff_${output}"
 	fi
 
 	if [[ "$COMMUNITY" = "true" ]] ; then
@@ -172,6 +174,7 @@ function populate_quick_test_list() {
 
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TREX | $TEE bench_trex_${output}"
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | $TEE bench_manhattanoff_${output}"
+	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib CAR_CHASE_O | $TEE bench_car_chaseoff_${output}"
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib PLOT3D | $TEE bench_plot3d_${output}"
 
 	TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib SYNMARK OglFillPixel ${synmark_cfg} | $TEE bench_OglFillPixel_${output}"
