@@ -21,7 +21,7 @@ declare -r DEFAULT_RES_Y=1080
 declare -r BENCHDIR=/opt/benchmarks/
 declare -r DEFAULT_LIBS=/usr/lib/xorg/modules/
 
-declare -r EXPECTED_VERSION=1.2
+declare -r EXPECTED_VERSION=1.3
 
 function get_benchmarks_version() {
 	if [ ! -f ${BENCHDIR}/VERSION ] ; then
