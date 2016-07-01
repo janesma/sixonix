@@ -35,7 +35,7 @@ Dependencies
 Benchmarks
 ==========
 - [Unigine Heaven, Valley](http://unigine.com/)
-- [GFXBench 2.7, 3, 3.1](https://gfxbench.com)
+- [GFXBench 2.7, 3, 3.1, 4](https://gfxbench.com)
 - [GPUTest](http://www.geeks3d.com/gputest/)
 - [Xonotic](http://www.xonotic.org/)
 - [Warsow](https://www.warsow.net/)
@@ -47,7 +47,7 @@ Benchmark Dependencies
 Here is a brief list of dependencies that I don't have on a new Arch install.
 Other distros probably are missing other things. You're on your own.
 
-- GFXBench3.1: libXi.so.6, libXrandr.so.2
+- GFXBench4: libXi.so.6, libXrandr.so.2
 - Warsow 2.1: libpng12
 
 Installation
