@@ -2,7 +2,8 @@ SYNMARK_PATH=$BENCHDIR/Synmark2-6.10/
 SYNMARK_HOME=~/SynMark2Home/
 
 function init_synmark_cfg() {
-	local runtime=$1
+	local syn_test=$1
+	local runtime=$2
 	local warmtime=$(bc -l <<< "scale=1; $runtime/2")
 
 
