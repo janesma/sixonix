@@ -16,7 +16,6 @@
 # failure cases, it will warn and fall back to this resolution.
 declare -r DEFAULT_RES_X=1920
 declare -r DEFAULT_RES_Y=1080
-#declare -r FORCE_DEFAULT_RESOLUTION=
 
 # Customize this to your own environments.
 declare -r BENCHDIR=/opt/benchmarks/
@@ -53,8 +52,6 @@ function init() {
 	# Get a count of number of GPU hangs at the start of the run
 	get_hang_count
 	export HANG_COUNT=$?
-
-	test_and_set_dimension $RES_X $RES_Y
 }
 
 function env_sanitize() {
@@ -72,10 +69,7 @@ function env_sanitize() {
 }
 
 function get_dimensions() {
-	if [[ -n ${FORCE_DEFAULT_RESOLUTION+x} ]]; then
-		RES_X=$DEFAULT_RES_X
-		RES_Y=$DEFAULT_RES_Y
-	elif hash xdpyinfo 2>/dev/null; then
+	if hash xdpyinfo 2>/dev/null; then
 		read RES_X RES_Y <<< $(xdpyinfo | grep dimensions | \
 			awk '{print $2}' | awk -Fx '{print $1, $2}')
 	else
@@ -90,28 +84,11 @@ function get_dimensions() {
 function set_dimensions() {
 	local newX=$1
 	local newY=$2
-
 	output=$(xrandr | grep -E " connected (primary )?[1-9]+" | \
 		sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
 	xrandr --output $output --mode ${newX}x${newY}
-	if [ $? -ne 0 ] ; then
-		export RES_X=$newX
-		export RES_Y=$newY
-	fi
-}
-
-function test_and_set_dimension() {
-	local oldX=$1
-	local oldY=$2
 
 	get_dimensions
-
-	if [ $oldX -ne $RES_X ] || [ $oldY -ne $RES_Y ] ; then
-		set_dimensions $RES_X $RES_Y
-		return 0
-	fi
-
-	return 1
 }
 
 function glx_env() {
