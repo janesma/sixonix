@@ -48,7 +48,7 @@ function gfxbench40() {
 	fi
 }
 TESTS[CAR_CHASE]='gfxbench40 gl_4 $GFXB40_PATH'
-TESTS[CAR_CHASE_O]='gfxbench40 gl_4_o $GFXB40_PATH'
+TESTS[CAR_CHASE_O]='gfxbench40 gl_4_off $GFXB40_PATH'
 TESTS[FILL]='gfxbench40 gl_fill2 $GFXB40_PATH'
 TESTS[FILL_O]='gfxbench40 gl_fill2_off $GFXB40_PATH'
 TESTS[TREX]='gfxbench40 gl_trex $GFXB40_PATH'
