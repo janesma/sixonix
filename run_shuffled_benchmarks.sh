@@ -101,6 +101,8 @@ function populate_full_test_list() {
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib MANHATTAN_O | $TEE bench_manhattanoff_${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib CAR_CHASE | $TEE bench_car_chase${output}"
 		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib CAR_CHASE_O | $TEE bench_car_chaseoff_${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TESS | $TEE bench_tess${output}"
+		TEST_LIST[((ndx++))]="${GLX_RUNNER} ${mesa}/usr/local/lib TESS_O | $TEE bench_tessoff_${output}"
 	fi
 
 	if [[ "$COMMUNITY" = "true" ]] ; then
