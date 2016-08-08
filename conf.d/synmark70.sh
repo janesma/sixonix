@@ -1,4 +1,4 @@
-SYNMARK_PATH=$BENCHDIR/Synmark2-6.10/
+SYNMARK_PATH=$BENCHDIR/Synmark2-7.0.0/
 SYNMARK_HOME=~/SynMark2Home/
 
 function init_synmark_cfg() {
@@ -33,16 +33,17 @@ function synmark()
 {
 	syn_test=$1
 	runtime=$2
+	#homeDir should work, but it doesn't
 	init_synmark_cfg $syn_test $runtime
 	if [ -z ${DEBUGGER+x} ]; then
 		./synmark2 | grep FPS | awk "{print \$2}"
 	else
-		${DEBUGGER} ./synmark2
+		${DEBUGGER} ./synmark2 #-homeDir ${SYNMARK_HOME}
 	fi
-	rm $synmark_cfg
+#	rm $synmark_cfg
 	unset synmark_cfg
 }
 
 # Synmark
-TESTS[SYNMARK61]='cd $SYNMARK_PATH ; synmark $1 "5.0"'
-TESTS[SYNMARK61_LONG]='cd $SYNMARK_PATH ; synmark $1 "20.0"'
+TESTS[SYNMARK]='cd $SYNMARK_PATH ; synmark $1 "5.0"'
+TESTS[SYNMARK_LONG]='cd $SYNMARK_PATH ; synmark $1 "20.0"'
