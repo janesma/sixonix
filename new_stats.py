@@ -147,7 +147,11 @@ def parse_results():
     benchmarks = list()
     for filename in os.listdir('.'):
         if '_' in filename:
-            useless, benchmark_name, mesa_version = filename.split('_')
+            try:
+                useless, benchmark_name, mesa_version = filename.split('_')
+            except ValueError:
+                print("Skipping invalid file: "  + filename)
+
             database[benchmark_name][mesa_version] = parse_single(filename)
             mesas.append(mesa_version)
             benchmarks.append(benchmark_name)
