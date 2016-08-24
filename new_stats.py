@@ -262,4 +262,5 @@ if __name__ == "__main__":
             """
             c_writer.writerows(RETROWS)
             run_column(output.getvalue())
+            print('\nHINT\n5 worst: new_stats.py | tail -n +2 | sort -nk 5 | head -n 5\n5 best: new_stats.py | tail -n +2 | sort -nk 5 | tail -n 5')
             output.close()
