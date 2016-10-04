@@ -14,6 +14,7 @@ function unigine() {
 	else
 		./bin/${bench}_x64 -engine_config ../$(basename $cfg)  | grep -i fps | awk "{print \$2}"
 	fi
+	rm $cfg
 }
 
 TESTS[VALLEY]='cd $VALLEY_PATH ; unigine $VALLEY_PATH valley'
