@@ -18,7 +18,7 @@ norris.jf.intel.com
 EOF
 
 local_version=$(cat ${BENCHMARK_DIR}/VERSION | head -n 1)
-for i in "${possible_hosts}" ; do
+for i in ${possible_hosts} ; do
 	ver=$(ssh $i "cat ${BENCHMARK_DIR}/VERSION" | head -n 1)
 	if [ $(echo " $local_version > $ver" | bc) -eq 1 ] ; then
 		targets+="-H $i"
