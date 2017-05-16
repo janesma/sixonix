@@ -7,7 +7,6 @@ import json
 import shutil
 import subprocess
 import sys
-import tempfile
 
 SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), ".."))
 CONF = path.join(SIXONIX_DIR, "conf.d", "windows.json")
@@ -31,8 +30,8 @@ def run(test):
              "tess_o" : "gl_tess_off"
     }
 
-    for old_result in glob.glob(results_dir + "/*_*"):
-        shutil.rmtree(old_result)
+    if os.path.exists(results_dir):
+        shutil.rmtree(results_dir)
 
     cmd = [executable_path,
            # "-w", "1920",
@@ -52,7 +51,6 @@ def run(test):
     score = json.load(open(result[0]))
     print(score["results"][0]["gfx_result"]["fps"])
 
-    for old_result in glob.glob(results_dir + "/*_*"):
-        shutil.rmtree(old_result)
+    shutil.rmtree(results_dir)
 
 run(sys.argv[1])
