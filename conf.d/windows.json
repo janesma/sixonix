@@ -1,0 +1,14 @@
+{
+    "gfxbench" : {
+        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/windows/gfxbench_gl-vs2013-4.0.0-public_fixes+corporate.zip",
+        "executable" : "gfxbench_gl-vs2013-4.0.0+corporate/bin/testfw_app.exe",
+        "installer" : "windows/gfx_bench_install.py",
+        "runner" : "windows/gfx_bench_run.py"
+    },
+    "tests" : {
+        "car_chase" : {"suite": "gfxbench"},
+        "car_chase_o" : {"suite": "gfxbench"},
+        "manhattan" : {"suite": "gfxbench"},
+        "manhattan_o" : {"suite": "gfxbench"}
+    }
+}
