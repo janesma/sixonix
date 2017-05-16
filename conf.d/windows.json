@@ -5,10 +5,26 @@
         "installer" : "windows/gfx_bench_install.py",
         "runner" : "windows/gfx_bench_run.py"
     },
+    "unigine" : {
+        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/windows/Unigine.zip",
+        "executable" : "Unigine/Sanctuary/Unigine.exe",
+        "installer" : "windows/unigine_install.py",
+        "runner" : "windows/unigine_run.py"
+    },
     "tests" : {
         "car_chase" : {"suite": "gfxbench"},
         "car_chase_o" : {"suite": "gfxbench"},
         "manhattan" : {"suite": "gfxbench"},
-        "manhattan_o" : {"suite": "gfxbench"}
+        "manhattan_o" : {"suite": "gfxbench"},
+        "trex" : { "suite" : "gfxbench" },
+        "trex_o" : { "suite" : "gfxbench" },
+        "fill" : { "suite" : "gfxbench" },
+        "fill_o" : { "suite" : "gfxbench" },
+        "tess" : { "suite" : "gfxbench" },
+        "tess_o" : { "suite" : "gfxbench" },
+	"heaven" : {"suite": "unigine"},
+	"valley" : {"suite": "unigine"},
+	"sanctuary" : {"suite": "unigine"},
+	"tropics" : {"suite": "unigine"}
     }
 }

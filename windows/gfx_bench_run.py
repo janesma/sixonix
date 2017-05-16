@@ -22,6 +22,7 @@ def run(test):
     tests = {"manhattan" : "gl_manhattan31",
              "manhattan_o" : "gl_manhattan31_off",
              "car_chase" : "gl_4",
+             "car_chase_o" : "gl_4_off",
              "trex" : "gl_trex",
              "trex_o" : "gl_trex_off",
              "fill" : " gl_fill2",
