@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 import os
 import os.path as path
@@ -56,4 +56,4 @@ def run(test):
         os.unlink(old_config)
     os.chdir(save_dir)
 
-run(sys.argv[1])
+run(sys.argv[1].lower())

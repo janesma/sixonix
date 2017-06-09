@@ -54,4 +54,4 @@ def run(test):
 
     shutil.rmtree(results_dir)
 
-run(sys.argv[1])
+run(sys.argv[1].lower())

@@ -1,9 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 import os
 import sys
 import json
-from urllib.request import urlretrieve
+from urllib import urlretrieve
 import zipfile
 
 SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
