@@ -1,0 +1,10 @@
+{
+    "windows" : {
+        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/windows/gfxbench_gl-vs2013-4.0.0-public_fixes+corporate.zip",
+        "executable" : "gfxbench_gl-vs2013-4.0.0+corporate/bin/testfw_app.exe"
+    },
+    "linux" : {
+        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/linux/gfxbench_gl-build-4.0.13-candidate+corporate.zip",
+        "executable" : "testfw_app"
+    }
+}
