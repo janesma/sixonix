@@ -8,8 +8,6 @@ import json
 from urllib import urlretrieve
 import zipfile
 
-SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-
 def install():
     """install gfxbench"""
     conf_file = os.path.join(SIXONIX_DIR, "gfxbench", "conf.json")
@@ -34,4 +32,8 @@ def install():
         perms = os.stat(executable)
         os.chmod(executable, perms.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-install()
+if __name__ == "__main__":
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+    install()
+else:
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

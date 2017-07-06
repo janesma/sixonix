@@ -9,13 +9,11 @@ import shutil
 import subprocess
 import sys
 
-SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), ".."))
-CONF = path.join(SIXONIX_DIR, "gfxbench", "conf.json")
-
 def run(test):
     """test gfxbench"""
-    assert path.exists(CONF)
-    conf = json.load(open(CONF))
+    conf_file = path.join(SIXONIX_DIR, "gfxbench", "conf.json")
+    assert path.exists(conf_file)
+    conf = json.load(open(conf_file))
     platform = "linux"
     if "win" in sys.platform:
         platform = "windows"
@@ -51,8 +49,12 @@ def run(test):
     result = glob.glob(results_dir + "/*/*.json")
     assert len(result) == 1
     score = json.load(open(result[0]))
-    print(score["results"][0]["gfx_result"]["fps"])
+    print score["results"][0]["gfx_result"]["fps"]
 
     shutil.rmtree(results_dir)
 
-run(sys.argv[1].lower())
+if __name__ == "__main__":
+    SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), ".."))
+    run(sys.argv[1].lower())
+else:
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
