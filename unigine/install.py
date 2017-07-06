@@ -7,8 +7,6 @@ from urllib import urlretrieve
 import subprocess
 import zipfile
 
-SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-
 def install():
     """install unigine"""
     conf_file = os.path.join(SIXONIX_DIR, "unigine", "conf.json")
@@ -38,5 +36,9 @@ def install():
             urlretrieve(installer, local_file)
         os.chdir(bench_dir)
         proc = subprocess.Popen(["bash", local_file])
-        
-install()
+
+if __name__ == "__main__":
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+    install()
+else:
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

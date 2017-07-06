@@ -8,8 +8,6 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
-SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-
 def run(test):
     """test unigine"""
     platform = "linux"
@@ -42,7 +40,6 @@ def run(test):
     width_tag = root.find(".//item[@name='video_width']")
     width_tag.text = "1920"
     root.write(bin_dir + "/config.cfg")
-    time.sleep(2)
 
     save_dir = os.getcwd()
     os.chdir(bin_dir)
@@ -67,4 +64,8 @@ def run(test):
         os.unlink(old_config)
     os.chdir(save_dir)
 
-run(sys.argv[1].lower())
+if __name__ == "__main__":
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+    run(sys.argv[1].lower())
+else:
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
