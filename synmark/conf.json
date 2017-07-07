@@ -1,0 +1,10 @@
+{
+    "windows" : {
+        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/windows/Unigine.zip",
+        "executable" : "Unigine/Sanctuary/Unigine.exe"
+    },
+    "linux" : {
+        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/linux/Synmark2-7.0.0.zip",
+        "executable" : "Synmark2-7.0.0/synmark2"
+    }
+}
