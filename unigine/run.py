@@ -53,7 +53,12 @@ def run(test):
                 "-data_path", "../",
                 "-video_mode", "-1",
                 "-system_script", "valley/unigine.cpp"]
-    proc = subprocess.Popen(cmd, stderr=open(os.devnull, "w"), stdout=subprocess.PIPE)
+    env = os.environ.copy()
+    env["vblank_mode"] = "0"
+    proc = subprocess.Popen(cmd,
+                            stderr=open(os.devnull, "w"),
+                            stdout=subprocess.PIPE,
+                            env=env)
     (out, _) = proc.communicate()
     for aline in out.decode("ascii").splitlines():
         if "FPS" not in aline:

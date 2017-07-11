@@ -49,7 +49,11 @@ AdaptiveFlipsTargetFps = 0;
 
     os.chdir(base_dir)
     cmd = [executable_path]
-    proc = subprocess.Popen(cmd) # , stderr=open(os.devnull, "w"), stdout=open(os.devnull, "w"))
+    env = os.environ.copy()
+    env["vblank_mode"] = "0"
+    proc = subprocess.Popen(cmd, env=env,
+                            stderr=open(os.devnull, "w"),
+                            stdout=open(os.devnull, "w"))
     proc.communicate()
     assert os.path.exists(result_path)
     with open(result_path, "r") as read_fh:

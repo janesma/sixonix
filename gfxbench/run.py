@@ -38,6 +38,8 @@ def run(test):
     if os.path.exists(results_dir):
         shutil.rmtree(results_dir)
 
+    env = os.environ.copy()
+    env["vblank_mode"] = "0"
     cmd = [executable_path,
            "--ei", "-fullscreen=1",
            "--ei", "-offscreen_width=1920",
@@ -46,7 +48,10 @@ def run(test):
            "-t", tests[test],
            "--ei", "-play_time=30000",
            "--gfx", "glfw"]
-    proc = subprocess.Popen(cmd, stderr=open(os.devnull, "w"), stdout=open(os.devnull, "w"))
+    proc = subprocess.Popen(cmd,
+                            stderr=open(os.devnull, "w"),
+                            stdout=open(os.devnull, "w"),
+                            env=env)
     proc.communicate()
 
     result = glob.glob(results_dir + "/*/*.json")
