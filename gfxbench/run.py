@@ -46,7 +46,6 @@ def run(test):
            "--ei", "-offscreen_height=1080",
            "-b", base_dir,
            "-t", tests[test],
-           "--ei", "-play_time=30000",
            "--gfx", "glfw"]
     proc = subprocess.Popen(cmd,
                             stderr=open(os.devnull, "w"),
