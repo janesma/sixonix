@@ -9,7 +9,7 @@ import shutil
 import subprocess
 import sys
 
-def run(test):
+def run(test, args=None):
     """test gfxbench"""
     conf_file = path.join(SIXONIX_DIR, "gfxbench", "conf.json")
     assert path.exists(conf_file)
@@ -20,6 +20,14 @@ def run(test):
     bench_dir = path.join(SIXONIX_DIR, "benchmarks", "gfxbench", platform)
     executable_path = path.join(bench_dir, conf[platform]["executable"])
     base_dir = path.abspath(executable_path + "/..")
+    width = "1920"
+    height = "1080"
+    fullscreen = True
+    if args:
+        width = args.width
+        height = args.height
+        fullscreen = (args.fullscreen == "true")
+
     if platform == "windows":
         # on windows, the base directory is one level higher.
         base_dir = path.abspath(base_dir + "/..")
@@ -41,12 +49,15 @@ def run(test):
     env = os.environ.copy()
     env["vblank_mode"] = "0"
     cmd = [executable_path,
-           "--ei", "-fullscreen=1",
-           "--ei", "-offscreen_width=1920",
-           "--ei", "-offscreen_height=1080",
            "-b", base_dir,
            "-t", tests[test],
            "--gfx", "glfw"]
+    cmd += ["--ei", "-offscreen_width=" + width,
+            "--ei", "-offscreen_height=" + height]
+    if fullscreen:
+        cmd += ["--ei", "-fullscreen=1"]
+    else:
+        cmd += ['-w', width, '-h', height]
     proc = subprocess.Popen(cmd,
                             stderr=open(os.devnull, "w"),
                             stdout=open(os.devnull, "w"),
@@ -61,7 +72,6 @@ def run(test):
     shutil.rmtree(results_dir)
 
 if __name__ == "__main__":
-    SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), ".."))
     run(sys.argv[1].lower())
 else:
     SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

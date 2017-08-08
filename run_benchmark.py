@@ -2,6 +2,7 @@
 
 """Runs all benchmarks"""
 
+import argparse
 import os.path as path
 import sys
 
@@ -60,7 +61,21 @@ SUITES = {"manhattan" : "gfxbench",
           "OglVSTangent" : "synmark",
           "OglZBuffer" : "synmark"}
 
-BENCH = sys.argv[1]
+cmd = sys.argv[0]
+parser = argparse.ArgumentParser(description="sixoxix runner")
+parser.add_argument('--fullscreen', type=str, default="true",
+                    choices=['true', 'false'],
+                    help="windowed or fullscreen (default: %(default)s)")
+parser.add_argument('--width', type=str, default="1920",
+                    help="screen/window width (default: %(default)s)")
+parser.add_argument('--height', type=str, default="1080",
+                    help="screen/window width (default: %(default)s)")
+parser.add_argument('benchmark', help="benchmark to run")
+args = parser.parse_args(sys.argv[1:])
+
+SIXONIX_DIR = path.abspath(path.join(path.dirname(cmd), ".."))
+
+BENCH = args.benchmark
 if BENCH not in SUITES:
     BENCH = BENCH.lower()
 if BENCH not in SUITES:
@@ -83,4 +98,4 @@ else:
     assert False
 
 MODULE.install()
-MODULE.run(BENCH)
+MODULE.run(BENCH, args)

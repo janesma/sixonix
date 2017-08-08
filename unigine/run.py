@@ -8,7 +8,7 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
-def run(test):
+def run(test, args=None):
     """test unigine"""
     platform = "linux"
     if "win" in sys.platform:

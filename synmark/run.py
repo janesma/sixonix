@@ -7,7 +7,7 @@ import json
 import subprocess
 import sys
 
-def run(test):
+def run(test, args=None):
     """test synmark"""
     conf_file = path.join(SIXONIX_DIR, "synmark", "conf.json")
     assert path.exists(conf_file)
