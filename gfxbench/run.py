@@ -41,7 +41,12 @@ def run(test, args=None):
              "fill" : " gl_fill2",
              "fill_o" : " gl_fill2_off",
              "tess" : "gl_tess",
-             "tess_o" : "gl_tess_off"}
+             "tess_o" : "gl_tess_off",
+             "alu2" : "gl_alu2",
+             "alu2_o" : "gl_alu2_off",
+             "driver2" : "gl_driver2",
+             "driver2_o" : "gl_driver2_off",
+    }
 
     if os.path.exists(results_dir):
         shutil.rmtree(results_dir)
