@@ -73,7 +73,7 @@ def run(test, args=None):
     os.chdir(save_dir)
 
 if __name__ == "__main__":
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "../.."))
     run(sys.argv[1].lower())
 else:
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))

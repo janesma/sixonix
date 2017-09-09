@@ -11,7 +11,7 @@ import sys
 
 def run(test, args=None):
     """test gfxbench"""
-    conf_file = path.join(SIXONIX_DIR, "gfxbench", "conf.json")
+    conf_file = path.join(path.dirname(__file__), "conf.json")
     assert path.exists(conf_file)
     conf = json.load(open(conf_file))
     platform = "linux"
@@ -79,4 +79,4 @@ def run(test, args=None):
 if __name__ == "__main__":
     run(sys.argv[1].lower())
 else:
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))

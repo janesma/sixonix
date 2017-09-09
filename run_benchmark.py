@@ -91,13 +91,13 @@ sys.path.append(path.join(path.dirname(path.abspath(sys.argv[0])), ".."))
 
 MODULE = None
 if SUITES[BENCH] == "unigine":
-    import unigine
+    from sixonix import unigine
     MODULE = unigine
 elif SUITES[BENCH] == "gfxbench":
-    import gfxbench
+    from sixonix import gfxbench
     MODULE = gfxbench
 elif SUITES[BENCH] == "synmark":
-    import synmark
+    from sixonix import synmark
     MODULE = synmark
 else:
     assert False

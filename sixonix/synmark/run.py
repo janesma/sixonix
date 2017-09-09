@@ -30,7 +30,7 @@ AdaptiveFlipsTargetFps = 0;
 
 def run(test, args=None):
     """test synmark"""
-    conf_file = path.join(SIXONIX_DIR, "synmark", "conf.json")
+    conf_file = path.join(path.dirname(__file__), "conf.json")
     assert path.exists(conf_file)
     conf = json.load(open(conf_file))
     platform = "linux"
@@ -74,7 +74,7 @@ def run(test, args=None):
     os.unlink(result_path)
 
 if __name__ == "__main__":
-    SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), ".."))
+    SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), "../.."))
     run(sys.argv[1])
 else:
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
