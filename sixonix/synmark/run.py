@@ -53,11 +53,14 @@ def run(test, args=None):
     cmd = [executable_path]
     env = os.environ.copy()
     env["vblank_mode"] = "0"
-    proc = subprocess.Popen(cmd, env=env,
-                            stderr=open(os.devnull, "w"),
-                            stdout=open(os.devnull, "w"),
-                            cwd=path.dirname(executable_path))
-    proc.communicate()
+    with subprocess.Popen(cmd, env=env,
+                          stderr=subprocess.PIPE,
+                          stdout=open(os.devnull, "w"),
+                          cwd=path.dirname(executable_path)) as proc:
+        _, err = proc.communicate()
+        if proc.returncode != 0:
+            raise RuntimeError(err)
+
     assert os.path.exists(result_path)
     with open(result_path, "r") as read_fh:
         results = read_fh.readlines()
