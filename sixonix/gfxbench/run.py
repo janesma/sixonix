@@ -63,11 +63,13 @@ def run(test, args=None):
         cmd += ["--ei", "-fullscreen=1"]
     else:
         cmd += ['-w', width, '-h', height]
-    proc = subprocess.Popen(cmd,
-                            stderr=open(os.devnull, "w"),
-                            stdout=open(os.devnull, "w"),
-                            env=env)
-    proc.communicate()
+    with subprocess.Popen(cmd,
+                          stderr=subprocess.PIPE,
+                          stdout=open(os.devnull, "w"),
+                          env=env) as proc:
+        out, err = proc.communicate()
+        if proc.returncode != 0:
+            raise RuntimeError(err)
 
     result = glob.glob(results_dir + "/*/*.json")
     assert len(result) == 1
