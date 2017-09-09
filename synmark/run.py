@@ -7,22 +7,11 @@ import json
 import subprocess
 import sys
 
-def run(test, args=None):
-    """test synmark"""
-    conf_file = path.join(SIXONIX_DIR, "synmark", "conf.json")
-    assert path.exists(conf_file)
-    conf = json.load(open(conf_file))
-    platform = "linux"
-    if "win" in sys.platform:
-        platform = "windows"
-    bench_dir = path.join(SIXONIX_DIR, "benchmarks", "synmark", platform)
-    executable_path = path.join(bench_dir, conf[platform]["executable"])
-    base_dir = path.abspath(executable_path + "/..")
-    config = """\
-TestsToRun = {};
-FullScreen = True;
-WindowWidth = 1920;
-WindowHeight = 1080;
+CONFIG_TEMPLATE = """\
+TestsToRun = {test};
+FullScreen = {fullscreen};
+WindowWidth = {width};
+WindowHeight = {height};
 FrameWidth = 0;
 FrameHeight = 0;
 VSyncEnable = False;
@@ -38,6 +27,19 @@ ScreenshotFrameNumber = 0;
 ValidateImage = False;
 AdaptiveFlipsTargetFps = 0;
 """
+
+def run(test, args=None):
+    """test synmark"""
+    conf_file = path.join(SIXONIX_DIR, "synmark", "conf.json")
+    assert path.exists(conf_file)
+    conf = json.load(open(conf_file))
+    platform = "linux"
+    if "win" in sys.platform:
+        platform = "windows"
+    bench_dir = path.join(SIXONIX_DIR, "benchmarks", "synmark", platform)
+    executable_path = path.join(bench_dir, conf[platform]["executable"])
+    base_dir = path.abspath(executable_path + "/..")
+
     config_path = path.expanduser("~/SynMark2Home/User.cfg")
     if path.exists(config_path):
         os.unlink(config_path)
@@ -45,7 +47,12 @@ AdaptiveFlipsTargetFps = 0;
     if path.exists(result_path):
         os.unlink(result_path)
     with open(config_path, "w") as config_fp:
-        config_fp.write(config.format(test))
+        config_fp.write(CONFIG_TEMPLATE.format(
+            test = test,
+            fullscreen = 'True' if args.fullscreen == 'true' else 'False',
+            width = args.width,
+            height = args.height
+        ))
 
     os.chdir(base_dir)
     cmd = [executable_path]
