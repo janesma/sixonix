@@ -7,6 +7,8 @@ import json
 import subprocess
 import sys
 
+from .. import config
+
 CONFIG_TEMPLATE = """\
 TestsToRun = {test};
 FullScreen = {fullscreen};
@@ -30,15 +32,9 @@ AdaptiveFlipsTargetFps = 0;
 
 def run(test, args=None):
     """test synmark"""
-    conf_file = path.join(path.dirname(__file__), "conf.json")
-    assert path.exists(conf_file)
-    conf = json.load(open(conf_file))
-    platform = "linux"
-    if "win" in sys.platform:
-        platform = "windows"
-    bench_dir = path.join(SIXONIX_DIR, "benchmarks", "synmark", platform)
-    executable_path = path.join(bench_dir, conf[platform]["executable"])
-    base_dir = path.abspath(executable_path + "/..")
+    conf = config.get_config_for_module("synmark")
+    assert len(conf.executables) == 1
+    executable_path = path.join(conf.benchmark_path, conf.executables[0])
 
     config_path = path.expanduser("~/SynMark2Home/User.cfg")
     if path.exists(config_path):
@@ -54,13 +50,13 @@ def run(test, args=None):
             height = args.height
         ))
 
-    os.chdir(base_dir)
     cmd = [executable_path]
     env = os.environ.copy()
     env["vblank_mode"] = "0"
     proc = subprocess.Popen(cmd, env=env,
                             stderr=open(os.devnull, "w"),
-                            stdout=open(os.devnull, "w"))
+                            stdout=open(os.devnull, "w"),
+                            cwd=path.dirname(executable_path))
     proc.communicate()
     assert os.path.exists(result_path)
     with open(result_path, "r") as read_fh:
@@ -72,9 +68,3 @@ def run(test, args=None):
 
     os.unlink(config_path)
     os.unlink(result_path)
-
-if __name__ == "__main__":
-    SIXONIX_DIR = path.abspath(path.join(path.dirname(sys.argv[0]), "../.."))
-    run(sys.argv[1])
-else:
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
