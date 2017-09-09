@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Runs all benchmarks"""
 
@@ -83,7 +83,8 @@ BENCH = args.benchmark
 if BENCH not in SUITES:
     BENCH = BENCH.lower()
 if BENCH not in SUITES:
-    print "ERROR: unknown benchmark.  Choose one of: " + " ".join(SUITES.keys())
+    print("ERROR: unknown benchmark.  Choose one of: " +
+          " ".join(SUITES.keys()))
     sys.exit(-1)
 
 sys.path.append(path.join(path.dirname(path.abspath(sys.argv[0])), ".."))

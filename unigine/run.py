@@ -63,7 +63,7 @@ def run(test, args=None):
     for aline in out.decode("ascii").splitlines():
         if "FPS" not in aline:
             continue
-        print aline.split()[1]
+        print(aline.split()[1])
         break
 
     for old_config in glob.glob(bin_dir + "/*cfg"):

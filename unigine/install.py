@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#! /usr/bin/env python3
+"""installs unigine binaries in the benchmarks directory"""
 
 import os
 import sys
 import json
-from urllib import urlretrieve
+from urllib.request import urlretrieve
 import subprocess
 import zipfile
 

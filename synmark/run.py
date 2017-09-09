@@ -61,7 +61,7 @@ AdaptiveFlipsTargetFps = 0;
         for line in results:
             if "FPS" not in line:
                 continue
-            print line.split()[1]
+            print(line.split()[1])
 
     os.unlink(config_path)
     os.unlink(result_path)
