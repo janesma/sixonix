@@ -8,12 +8,11 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
+from .. import config
+
 def run(test, args=None):
     """test unigine"""
-    platform = "linux"
-    if "win" in sys.platform:
-        platform = "windows"
-    bench_dir = os.path.join(SIXONIX_DIR, "benchmarks", "unigine", platform)
+    conf = config.get_config_for_module("unigine")
     tests = {
         "heaven" : {
             "config" : "heaven.cfg",
@@ -26,10 +25,9 @@ def run(test, args=None):
             "linux" : "Unigine_Valley-1.0/bin/valley_x64"
         }
     }
-    executable_path = os.path.join(bench_dir, tests[test][platform])
-    bin_dir, exe = os.path.split(executable_path)
-    if platform == "linux":
-        exe = "./" + exe
+    executable_path = os.path.join(conf.benchmark_path,
+                                   tests[test][conf.platform])
+    bin_dir = os.path.dirname(executable_path)
 
     for old_config in glob.glob(bin_dir + "/*cfg"):
         os.unlink(old_config)
@@ -43,9 +41,7 @@ def run(test, args=None):
     width_tag.text = "1920"
     root.write(bin_dir + "/config.cfg")
 
-    save_dir = os.getcwd()
-    os.chdir(bin_dir)
-    cmd = [exe,
+    cmd = [executable_path,
            "-engine_config", "config.cfg",
            "-video_fullscreen", "1",
            "-sound_app", "null",
@@ -60,7 +56,8 @@ def run(test, args=None):
     proc = subprocess.Popen(cmd,
                             stderr=open(os.devnull, "w"),
                             stdout=subprocess.PIPE,
-                            env=env)
+                            env=env,
+                            cwd=bin_dir)
     (out, _) = proc.communicate()
     for aline in out.decode("ascii").splitlines():
         if "FPS" not in aline:
@@ -70,10 +67,3 @@ def run(test, args=None):
 
     for old_config in glob.glob(bin_dir + "/*cfg"):
         os.unlink(old_config)
-    os.chdir(save_dir)
-
-if __name__ == "__main__":
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "../.."))
-    run(sys.argv[1].lower())
-else:
-    SIXONIX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
