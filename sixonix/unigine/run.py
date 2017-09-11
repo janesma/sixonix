@@ -36,14 +36,14 @@ def run(test, args=None):
                              tests[test]["config"])
     root = ET.parse(conf_path)
     height_tag = root.find(".//item[@name='video_height']")
-    height_tag.text = "1080"
+    height_tag.text = str(args.height)
     width_tag = root.find(".//item[@name='video_width']")
-    width_tag.text = "1920"
+    width_tag.text = str(args.width)
     root.write(bin_dir + "/config.cfg")
 
     cmd = [executable_path,
            "-engine_config", "config.cfg",
-           "-video_fullscreen", "1",
+           "-video_fullscreen", "1" if args.fullscreen == "true" else "0",
            "-sound_app", "null",
            "-extern_define", "PHORONIX,RELEASE"]
     if test == "valley":
