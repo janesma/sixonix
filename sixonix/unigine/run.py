@@ -42,15 +42,16 @@ def run(test, args=None):
     root.write(bin_dir + "/config.cfg")
 
     cmd = [executable_path,
+           "-video_app", "opengl",
+           "-data_path", "../",
            "-engine_config", "config.cfg",
+           "-system_script", test + "/unigine.cpp",
+           "-video_mode", "-1",
            "-video_fullscreen", "1" if args.fullscreen == "true" else "0",
+           "-video_width", str(args.width),
+           "-video_height", str(args.height),
            "-sound_app", "null",
            "-extern_define", "PHORONIX,RELEASE"]
-    if test == "valley":
-        cmd += ["-video_app", "opengl",
-                "-data_path", "../",
-                "-video_mode", "-1",
-                "-system_script", "valley/unigine.cpp"]
     env = os.environ.copy()
     env["vblank_mode"] = "0"
     proc = subprocess.Popen(cmd,
