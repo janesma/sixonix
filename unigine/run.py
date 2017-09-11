@@ -34,7 +34,9 @@ def run(test, args=None):
     for old_config in glob.glob(bin_dir + "/*cfg"):
         os.unlink(old_config)
 
-    root = ET.parse(open(SIXONIX_DIR + "/unigine/" + tests[test]["config"]))
+    conf_path = os.path.join(os.path.dirname(__file__),
+                             tests[test]["config"])
+    root = ET.parse(conf_path)
     height_tag = root.find(".//item[@name='video_height']")
     height_tag.text = "1080"
     width_tag = root.find(".//item[@name='video_width']")
