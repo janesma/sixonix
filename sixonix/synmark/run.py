@@ -9,6 +9,15 @@ import sys
 
 from .. import config
 
+def env_prepend_path(env, key, path):
+    if key in env:
+        # TODO: Windows
+        sep = ':'
+        env[key] = sep.join([path, env[key]])
+    else:
+        env[key] = path
+
+
 CONFIG_TEMPLATE = """\
 TestsToRun = {test};
 FullScreen = {fullscreen};
@@ -52,6 +61,8 @@ def run(test, args=None):
 
     cmd = [executable_path]
     env = os.environ.copy()
+    if conf.platform == "linux":
+        env_prepend_path(env, "LD_LIBRARY_PATH", conf.benchmark_path)
     env["vblank_mode"] = "0"
     with subprocess.Popen(cmd, env=env,
                           stderr=subprocess.PIPE,
