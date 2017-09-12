@@ -47,12 +47,12 @@ def run(test, args=None):
            "-b", base_dir,
            "-t", tests[test],
            "--gfx", "glfw"]
-    cmd += ["--ei", "-offscreen_width=" + args.width,
-            "--ei", "-offscreen_height=" + args.height]
-    if args.fullscreen == "true":
+    cmd += ["--ei", "-offscreen_width=" + str(args.width),
+            "--ei", "-offscreen_height=" + str(args.height)]
+    if args.fullscreen:
         cmd += ["--ei", "-fullscreen=1"]
     else:
-        cmd += ['-w', args.width, '-h', args.height]
+        cmd += ['-w', str(args.width), '-h', str(args.height)]
     with subprocess.Popen(cmd,
                           stderr=subprocess.PIPE,
                           stdout=open(os.devnull, "w"),

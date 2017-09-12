@@ -45,9 +45,9 @@ def run(test, args=None):
     with open(config_path, "w") as config_fp:
         config_fp.write(CONFIG_TEMPLATE.format(
             test = test,
-            fullscreen = 'True' if args.fullscreen == 'true' else 'False',
-            width = args.width,
-            height = args.height
+            fullscreen = str(args.fullscreen),
+            width = str(args.width),
+            height = str(args.height)
         ))
 
     cmd = [executable_path]

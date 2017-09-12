@@ -47,7 +47,7 @@ def run(test, args=None):
            "-engine_config", "config.cfg",
            "-system_script", test + "/unigine.cpp",
            "-video_mode", "-1",
-           "-video_fullscreen", "1" if args.fullscreen == "true" else "0",
+           "-video_fullscreen", str(int(args.fullscreen)),
            "-video_width", str(args.width),
            "-video_height", str(args.height),
            "-sound_app", "null",
