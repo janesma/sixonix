@@ -5,5 +5,4 @@
 import sixonix
 
 for name, module in sixonix.SUITES.items():
-    print("Installing benchmark binaries for {}...".format(name))
     module.install()

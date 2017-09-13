@@ -2,12 +2,37 @@ import os
 import os.path
 import stat
 import subprocess
+import sys
 from urllib.request import urlretrieve
 import zipfile
 
 from . import config
 
-def install_benchmarks_for_module(module_name):
+class TQDMReporter:
+    def __init__(self, tqdm, desc):
+        self.tqdm = tqdm.tqdm
+        self.desc = desc
+        self.pbar = None
+
+    def __call__(self, count, block_size, total_size):
+        if self.pbar is None:
+            self.pbar = self.tqdm(desc = self.desc, ascii = True,
+                                  total = total_size, unit = 'B',
+                                  unit_scale = True, unit_divisor = 1024)
+
+        self.pbar.update(block_size)
+
+        if count * block_size >= total_size:
+            self.pbar.close()
+
+def get_report_hook(desc):
+    try:
+        import tqdm
+        return TQDMReporter(tqdm, desc)
+    except ModuleNotFoundError:
+        return None
+
+def install_benchmarks_for_module(module_name, quiet = False):
     """Installs the bechmark binaries for the given module"""
     conf = config.get_config_for_module(module_name)
 
@@ -21,13 +46,18 @@ def install_benchmarks_for_module(module_name):
     if installed:
         return
 
+    if not quiet:
+        print("Installing benchmark binaries for {}...".format(module_name))
+
     os.makedirs(conf.benchmark_path, exist_ok = True)
 
     for package_url in conf.packages:
         package_fname = os.path.join(conf.benchmark_path,
                                      os.path.basename(package_url))
         if not os.path.exists(package_fname):
-            urlretrieve(package_url, package_fname)
+            reporthook = None if quiet else \
+                         get_report_hook(os.path.basename(package_url))
+            urlretrieve(package_url, package_fname, reporthook)
 
         if package_fname.endswith(".zip"):
             zipf = zipfile.ZipFile(package_fname)
