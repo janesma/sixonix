@@ -6,12 +6,15 @@ import argparse
 import os.path as path
 import sys
 import sixonix.gfxbench
+import sixonix.gputest
 import sixonix.synmark
 import sixonix.unigine
 
 SUITES = {}
 for name in sixonix.gfxbench.BENCHMARKS:
     SUITES[name] = "gfxbench"
+for name in sixonix.gputest.BENCHMARKS:
+    SUITES[name] = "gputest"
 for name in sixonix.synmark.BENCHMARKS:
     SUITES[name] = "synmark"
 for name in sixonix.unigine.BENCHMARKS:
@@ -45,6 +48,8 @@ if SUITES[BENCH] == "unigine":
     MODULE = sixonix.unigine
 elif SUITES[BENCH] == "gfxbench":
     MODULE = sixonix.gfxbench
+elif SUITES[BENCH] == "gputest":
+    MODULE = sixonix.gputest
 elif SUITES[BENCH] == "synmark":
     MODULE = sixonix.synmark
 else:
