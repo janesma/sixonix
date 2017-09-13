@@ -8,13 +8,7 @@ import sys
 import sixonix
 
 cmd = sys.argv[0]
-parser = argparse.ArgumentParser(description="sixoxix runner")
-parser.add_argument('--fullscreen', action="store_true",
-                    help="run fullscreen")
-parser.add_argument('--width', type=int, default=1920,
-                    help="screen/window width (default: %(default)s)")
-parser.add_argument('--height', type=int, default=1080,
-                    help="screen/window width (default: %(default)s)")
+parser = argparse.ArgumentParser(parents=[sixonix.run_argparse])
 parser.add_argument('benchmark', help="benchmark to run")
 args = parser.parse_args(sys.argv[1:])
 

@@ -2,6 +2,7 @@ import os
 import os.path
 import importlib
 import functools
+import argparse
 
 SIXONIX_PATH = os.path.join(os.path.dirname(__file__))
 BENCHMARKS_PATH = os.path.join(SIXONIX_PATH, "..", "benchmarks")
@@ -28,6 +29,15 @@ for name in os.listdir(os.path.dirname(__file__)):
         continue
 
 BENCHMARKS.sort()
+
+run_argparse = argparse.ArgumentParser(description='sixoxix runner',
+                                       add_help=False)
+run_argparse.add_argument('--fullscreen', action='store_true',
+                          help='run fullscreen')
+run_argparse.add_argument('--width', type=int, default=1920,
+                          help='screen/window width (default: %(default)s)')
+run_argparse.add_argument('--height', type=int, default=1080,
+                          help='screen/window width (default: %(default)s)')
 
 def run(test, args, env = os.environ, install = True):
     suite = test.split(".")[0]
