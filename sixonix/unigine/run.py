@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 
 from .. import config
 
-def run(test, args=None):
+def run(test, args, env):
     """test unigine"""
     conf = config.get_config_for_module("unigine")
     tests = {
@@ -52,8 +52,6 @@ def run(test, args=None):
            "-video_height", str(args.height),
            "-sound_app", "null",
            "-extern_define", "PHORONIX,RELEASE"]
-    env = os.environ.copy()
-    env["vblank_mode"] = "0"
     proc = subprocess.Popen(cmd,
                             stderr=open(os.devnull, "w"),
                             stdout=subprocess.PIPE,

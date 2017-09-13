@@ -11,7 +11,7 @@ import sys
 
 from .. import config
 
-def run(test, args=None):
+def run(test, args, env):
     """test gfxbench"""
     conf = config.get_config_for_module("gfxbench")
     assert len(conf.executables) == 1
@@ -41,8 +41,6 @@ def run(test, args=None):
     if os.path.exists(results_dir):
         shutil.rmtree(results_dir)
 
-    env = os.environ.copy()
-    env["vblank_mode"] = "0"
     cmd = [executable_path,
            "-b", base_dir,
            "-t", tests[test],

@@ -13,7 +13,7 @@ from .. import config
 # Benchmark duration in seconds
 DURATION_SECONDS = 10
 
-def run(test, args=None):
+def run(test, args, env):
     """test gputest"""
     conf = config.get_config_for_module('gputest')
     assert len(conf.executables) == 1
@@ -42,8 +42,6 @@ def run(test, args=None):
     if args.fullscreen:
         cmd.append("/fullscreen")
 
-    env = os.environ.copy()
-    env["vblank_mode"] = "0"
     with subprocess.Popen(cmd, env=env,
                           stderr=subprocess.PIPE,
                           stdout=subprocess.PIPE,

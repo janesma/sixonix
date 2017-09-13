@@ -39,7 +39,7 @@ ValidateImage = False;
 AdaptiveFlipsTargetFps = 0;
 """
 
-def run(test, args=None):
+def run(test, args, env):
     """test synmark"""
     conf = config.get_config_for_module("synmark")
     assert len(conf.executables) == 1
@@ -60,10 +60,8 @@ def run(test, args=None):
         ))
 
     cmd = [executable_path]
-    env = os.environ.copy()
     if conf.platform == "linux":
         env_prepend_path(env, "LD_LIBRARY_PATH", conf.benchmark_path)
-    env["vblank_mode"] = "0"
     with subprocess.Popen(cmd, env=env,
                           stderr=subprocess.PIPE,
                           stdout=open(os.devnull, "w"),

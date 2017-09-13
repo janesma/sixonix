@@ -21,10 +21,13 @@ BENCHMARKS.sort()
 
 from . import install as _install
 
-def run(test, args, install = True):
+def run(test, args, env = os.environ, install = True):
     suite = test.split(".")[0]
     test = test.split(".")[1]
     if install:
         SUITES[suite].install()
 
-    return SUITES[suite].run(test, args)
+    env = env.copy()
+    env["vblank_mode"] = "0"
+
+    return SUITES[suite].run(test, args, env)
