@@ -18,4 +18,4 @@ if BENCH not in sixonix.BENCHMARKS:
         print("    " + test)
     sys.exit(-1)
 
-sixonix.run(BENCH, args)
+print(sixonix.run(BENCH, args))

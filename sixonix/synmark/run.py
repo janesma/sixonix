@@ -71,12 +71,16 @@ def run(test, args, env):
             raise RuntimeError(err)
 
     assert os.path.exists(result_path)
+    fps = None
     with open(result_path, "r") as read_fh:
         results = read_fh.readlines()
         for line in results:
             if "FPS" not in line:
                 continue
-            print(line.split()[1])
+            fps = float(line.split()[1])
+            break
 
     os.unlink(config_path)
     os.unlink(result_path)
+
+    return fps

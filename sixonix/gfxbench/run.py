@@ -62,6 +62,8 @@ def run(test, args, env):
     result = glob.glob(results_dir + "/*/*.json")
     assert len(result) == 1
     score = json.load(open(result[0]))
-    print(score["results"][0]["gfx_result"]["fps"])
+    fps = float(score["results"][0]["gfx_result"]["fps"])
 
     shutil.rmtree(results_dir)
+
+    return fps

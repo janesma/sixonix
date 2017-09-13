@@ -58,11 +58,14 @@ def run(test, args, env):
                             env=env,
                             cwd=bin_dir)
     (out, _) = proc.communicate()
+    fps = None
     for aline in out.decode("ascii").splitlines():
         if "FPS" not in aline:
             continue
-        print(aline.split()[1])
+        fps = float(aline.split()[1])
         break
 
     for old_config in glob.glob(bin_dir + "/*cfg"):
         os.unlink(old_config)
+
+    return fps

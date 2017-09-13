@@ -54,5 +54,4 @@ def run(test, args, env):
     # "points" are actually just the number of frames rendered.  Divide by
     # the test duration and you get a more accurate FPS number.
     m = re.search(r'Score:\s*(?P<frames>\d+)\s*points', out.decode('utf-8'))
-    fps = float(m.group('frames')) / DURATION_SECONDS
-    print(fps)
+    return float(m.group('frames')) / DURATION_SECONDS
