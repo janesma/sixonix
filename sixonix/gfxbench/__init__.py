@@ -1,5 +1,4 @@
 from .run import run
-from .. import install as _install
 
 BENCHMARKS = [
     "manhattan",
@@ -17,6 +16,3 @@ BENCHMARKS = [
     "driver2",
     "driver2_o",
 ]
-
-def install():
-    _install.install_benchmarks_for_module("gfxbench")
