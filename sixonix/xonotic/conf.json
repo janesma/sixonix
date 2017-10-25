@@ -1,0 +1,13 @@
+{
+    "windows" : {
+        "package" : "http://dl.xonotic.org/xonotic-0.8.2.zip",
+        "executable" : "xonotic-0.8.2/Xonotic/xonotix.exe"
+    },
+    "linux" : {
+        "package" : "http://dl.xonotic.org/xonotic-0.8.2.zip",
+        "executable" : [
+            "Xonotic/xonotic-linux-glx.sh",
+            "Xonotic/xonotic-linux64-glx"
+        ]
+    }
+}
