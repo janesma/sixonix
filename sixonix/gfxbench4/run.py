@@ -13,7 +13,7 @@ from .. import config
 
 def run(test, args, env):
     """test gfxbench"""
-    conf = config.get_config_for_module("gfxbench")
+    conf = config.get_config_for_module("gfxbench4")
     assert len(conf.executables) == 1
     executable_path = path.join(conf.benchmark_path, conf.executables[0])
 
