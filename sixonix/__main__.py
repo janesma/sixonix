@@ -1,0 +1,2 @@
+import sixonix
+sixonix.main()
