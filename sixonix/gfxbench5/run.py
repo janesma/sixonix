@@ -19,15 +19,30 @@ def run(test, args, env):
 
     base_dir = path.join(path.dirname(executable_path), '..')
     results_dir = os.path.join(base_dir, "results")
-    tests = {
-        "aztec_ruins_gl_high" : "gl_5_high",
-        "aztec_ruins_gl_normal" : "gl_5_normal",
-        "aztec_ruins_gl_high_o" : "gl_5_high_off",
-        "aztec_ruins_gl_normal_o" : "gl_5_normal_off",
-        "aztec_ruins_vk_high" : "gl_5_high",
-        "aztec_ruins_vk_normal" : "gl_5_normal",
-        "aztec_ruins_vk_high_o" : "gl_5_high_off",
-        "aztec_ruins_vk_normal_o" : "gl_5_normal_off",
+    tests = {"aztec_ruins_gl_high" : "gl_5_high",
+             "aztec_ruins_gl_normal" : "gl_5_normal",
+             "aztec_ruins_gl_high_o" : "gl_5_high_off",
+             "aztec_ruins_gl_normal_o" : "gl_5_normal_off",
+             "aztec_ruins_vk_high" : "gl_5_high",
+             "aztec_ruins_vk_normal" : "gl_5_normal",
+             "aztec_ruins_vk_high_o" : "gl_5_high_off",
+             "aztec_ruins_vk_normal_o" : "gl_5_normal_off",
+             "manhattan" : "gl_manhattan31",
+             "manhattan_o" : "gl_manhattan31_off",
+             "car_chase" : "gl_4",
+             "car_chase_o" : "gl_4_off",
+             "trex" : "gl_trex",
+             "trex_o" : "gl_trex_off",
+             "fill" : " gl_fill2",
+             "fill_o" : " gl_fill2_off",
+             "tess" : "gl_tess",
+             "tess_o" : "gl_tess_off",
+             "alu2" : "gl_alu2",
+             "alu2_o" : "gl_alu2_off",
+             "driver2" : "gl_driver2",
+             "driver2_o" : "gl_driver2_off",
+             "egypt" : "gl_egypt",
+             "egypt_o" : "gl_egypt_off",
     }
 
     if os.path.exists(results_dir):
