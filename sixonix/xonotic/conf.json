@@ -1,7 +1,7 @@
 {
     "windows" : {
         "package" : "http://dl.xonotic.org/xonotic-0.8.2.zip",
-        "executable" : "xonotic-0.8.2/Xonotic/xonotix.exe"
+        "executable" : "Xonotic/xonotic.exe"
     },
     "linux" : {
         "package" : "http://dl.xonotic.org/xonotic-0.8.2.zip",
