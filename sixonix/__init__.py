@@ -29,7 +29,7 @@ for name in os.listdir(os.path.dirname(__file__)):
         mod.install = functools.partial(_install.install_benchmarks_for_module,
                                         name)
 
-    except ModuleNotFoundError:
+    except ImportError:
         continue
 
 BENCHMARKS.sort()
