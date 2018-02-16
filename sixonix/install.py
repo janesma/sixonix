@@ -73,13 +73,16 @@ def install_benchmarks_for_module(module_name, quiet = False):
                     os.path.remove(extract_ok)
                 assert False, ("ERROR: The benchmark package could not be "
                                "fully extracted.")
-                # 'touch' the extract_ok file to create it
-                with open(extract_ok, 'a'):
-                    os.utime(extract_ok)
+            # 'touch' the extract_ok file to create it
+            with open(extract_ok, 'a'):
+                os.utime(extract_ok)
         elif package_fname.endswith(".run"):
             proc = subprocess.Popen(["bash", package_fname],
                                     cwd = conf.benchmark_path)
             proc.communicate()
+            # 'touch' the extract_ok file to create it
+            with open(extract_ok, 'a'):
+                os.utime(extract_ok)
         else:
             assert False, "Unknown package file extension"
 
