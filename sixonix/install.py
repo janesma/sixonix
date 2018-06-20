@@ -77,7 +77,7 @@ def install_benchmarks_for_module(module_name, quiet = False):
             with open(extract_ok, 'a'):
                 os.utime(extract_ok)
         elif package_fname.endswith(".run"):
-            proc = subprocess.Popen(["bash", package_fname],
+            proc = subprocess.Popen(["bash", package_fname, "--nox11"],
                                     cwd = conf.benchmark_path)
             proc.communicate()
             # 'touch' the extract_ok file to create it
