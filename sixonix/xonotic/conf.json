@@ -1,10 +1,10 @@
 {
     "windows" : {
-        "package" : "http://dl.xonotic.org/xonotic-0.8.2.zip",
+        "package" : "http://otc-mesa-android.jf.intel.com/userContent/benchmarks/xonotic-0.8.2.zip",
         "executable" : "Xonotic/xonotic.exe"
     },
     "linux" : {
-        "package" : "http://otc-mesa-android.jf.intel.com/userContent/xonotic-0.8.2.zip",
+        "package" : "http://otc-mesa-android.jf.intel.com/userContent/benchmarks/xonotic-0.8.2.zip",
         "executable" : [
             "Xonotic/xonotic-linux-glx.sh",
             "Xonotic/xonotic-linux64-glx"

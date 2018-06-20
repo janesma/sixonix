@@ -1,11 +1,11 @@
 {
     "windows" : {
-        "package" : "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/windows/Unigine.zip",
+        "package" : "http://otc-mesa-android.jf.intel.com/userContent/benchmarks/windows/Unigine.zip",
         "executable" : "Unigine/Sanctuary/Unigine.exe"
     },
     "linux" : {
-        "package" : ["http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/linux/Unigine_Heaven-4.0.run",
-                    "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/linux/Unigine_Valley-1.0.run"],
+        "package" : ["http://otc-mesa-android.jf.intel.com/userContent/benchmarks/linux/Unigine_Heaven-4.0.run",
+                    "http://otc-mesa-android.jf.intel.com/userContent/benchmarks/linux/Unigine_Valley-1.0.run"],
         "executable" : ["Unigine_Heaven-4.0/heaven",
                         "Unigine_Valley-1.0/bin/browser_x64"]
     }
