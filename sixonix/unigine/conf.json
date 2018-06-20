@@ -6,6 +6,7 @@
     "linux" : {
         "package" : ["http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/linux/Unigine_Heaven-4.0.run",
                     "http://otc-mesa-ci.jf.intel.com/userContent/benchmarks/linux/Unigine_Valley-1.0.run"],
-        "executable" : "Unigine_Heaven-4.0/heaven"
+        "executable" : ["Unigine_Heaven-4.0/heaven",
+                        "Unigine_Valley-1.0/bin/browser_x64"]
     }
 }
