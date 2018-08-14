@@ -45,6 +45,9 @@ def run(test, args, env):
     assert len(conf.executables) == 1
     executable_path = path.join(conf.benchmark_path, conf.executables[0])
 
+    home_dir = path.expanduser("~/SynMark2Home")
+    if not os.path.exists(home_dir):
+        os.makedirs(home_dir)
     config_path = path.expanduser("~/SynMark2Home/User.cfg")
     if path.exists(config_path):
         os.unlink(config_path)
